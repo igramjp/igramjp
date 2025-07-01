@@ -36,13 +36,19 @@
     Waiting for MIDI input...
   </div>
   <script type="module">
-    import init, { send_note_to_rust } from "/app/just-intonation-midi/pkg/midi_web.js";
-    import { log_to_js } from "/app/just-intonation-midi/js/helpers.js";
+    import init, { send_note_to_rust } from "./pkg/midi_web.js";
+    import { log_to_js } from "./js/helpers.js";
 
     async function run() {
-      await init();
-      window.log_to_js = log_to_js;
-      window.sendNoteToRust = send_note_to_rust;
+      try {
+        await init();
+        window.log_to_js = log_to_js;
+        window.sendNoteToRust = send_note_to_rust;
+        console.log('WASM初期化完了');
+      } catch (error) {
+        console.error('WASM初期化エラー:', error);
+        document.getElementById("output").textContent = "WASM初期化エラー: " + error.message;
+      }
     }
 
     run();
@@ -66,7 +72,7 @@
         input.onmidimessage = onMIDIMessage;
         inputCount++;
       }
-      document.getElementById("output").textContent = inputCount > 0 ? 
+      document.getElementById("output").textContent = inputCount > 0 ?
         `MIDI ready (${inputCount} devices)` : "No MIDI devices found";
     }).catch((error) => {
       console.error("MIDI access failed:", error);
