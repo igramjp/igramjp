@@ -1,1 +1,4 @@
+/app/just-intonation-midi/pkg/*    /app/just-intonation-midi/pkg/:splat   200
+/app/just-intonation-midi/js/*     /app/just-intonation-midi/js/:splat    200
+/app/just-intonation-midi/*        /app/just-intonation-midi/:splat       200
 /*    /index.html   200 
