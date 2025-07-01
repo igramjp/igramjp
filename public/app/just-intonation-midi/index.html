@@ -1,85 +1,69 @@
 <!doctype html>
 <html>
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Pure Intonation | igram.jp</title>
-    <link href="static/output.css" rel="stylesheet" />
-  </head>
-  <body class="bg-white p-4">
-    <div>
-      <label
-        for="frequency"
-        class="w-full font-mono text-sm font-medium text-gray-700"
-        >Reference Frequency(Hz):</label
-      >
-      <input
-        type="number"
-        id="frequency"
-        name="frequency"
-        value="440.0"
-        class="mb-2 mt-1 block w-min rounded-md border border-gray-300 px-1 py-1 font-mono shadow-sm focus:outline-none sm:text-sm"
-      />
-    </div>
-    <div>
-      <label
-        for="rootKey"
-        class="w-full font-mono text-sm font-medium text-gray-700"
-        >Root Key:</label
-      >
-      <select
-        id="rootKey"
-        name="rootKey"
-        class="mb-2 mt-1 block w-min rounded-md border border-gray-300 bg-white px-1 py-1 font-mono shadow-sm focus:outline-none sm:text-sm"
-      >
-        <option value="C">C</option>
-        <option value="C#">C#</option>
-        <option value="D">D</option>
-        <option value="D#">D#</option>
-        <option value="E">E</option>
-        <option value="F">F</option>
-        <option value="F#">F#</option>
-        <option value="G">G</option>
-        <option value="G#">G#</option>
-        <option value="A">A</option>
-        <option value="A#">A#</option>
-        <option value="B">B</option>
-      </select>
-    </div>
-    <div
-      id="output"
-      class="mt-4 inline-flex bg-black px-3 py-1 font-mono text-base font-medium text-white"
-    >
-      Waiting for MIDI input...
-    </div>
-    <script type="module">
-      import init, { send_note_to_rust } from "./pkg/midi_web.js";
-      import { log_to_js } from "./js/helpers.js";
 
-      async function run() {
-        await init();
-        window.log_to_js = log_to_js;
-        window.sendNoteToRust = send_note_to_rust;
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Real-Time Just Intonation Frequencies – A Web MIDI Experiment | igram.jp</title>
+  <link href="static/output.css" rel="stylesheet" />
+</head>
+
+<body class="bg-white p-4">
+  <div>
+    <label for="frequency" class="w-full font-mono text-sm font-medium text-gray-700">Reference Frequency(Hz):</label>
+    <input type="number" id="frequency" name="frequency" value="440.0"
+      class="mb-2 mt-1 block w-min rounded-md border border-gray-300 px-1 py-1 font-mono shadow-sm focus:outline-none sm:text-sm" />
+  </div>
+  <div>
+    <label for="rootKey" class="w-full font-mono text-sm font-medium text-gray-700">Root Key:</label>
+    <select id="rootKey" name="rootKey"
+      class="mb-2 mt-1 block w-min rounded-md border border-gray-300 bg-white px-1 py-1 font-mono shadow-sm focus:outline-none sm:text-sm">
+      <option value="C">C</option>
+      <option value="C#">C#</option>
+      <option value="D">D</option>
+      <option value="D#">D#</option>
+      <option value="E">E</option>
+      <option value="F">F</option>
+      <option value="F#">F#</option>
+      <option value="G">G</option>
+      <option value="G#">G#</option>
+      <option value="A">A</option>
+      <option value="A#">A#</option>
+      <option value="B">B</option>
+    </select>
+  </div>
+  <div id="output" class="mt-4 inline-flex bg-black px-3 py-1 font-mono text-base font-medium text-white">
+    Waiting for MIDI input...
+  </div>
+  <script type="module">
+    import init, { send_note_to_rust } from "./pkg/midi_web.js";
+    import { log_to_js } from "./js/helpers.js";
+
+    async function run() {
+      await init();
+      window.log_to_js = log_to_js;
+      window.sendNoteToRust = send_note_to_rust;
+    }
+
+    run();
+
+    function onMIDIMessage(message) {
+      const [status, note, velocity] = message.data;
+      if (status === 144 && velocity > 0) {
+        // Note On message
+        const frequency = document.getElementById("frequency").value;
+        const rootKey = document.getElementById("rootKey").value;
+        sendNoteToRust(note, parseFloat(frequency), rootKey);
       }
+    }
 
-      run();
-
-      function onMIDIMessage(message) {
-        const [status, note, velocity] = message.data;
-        if (status === 144 && velocity > 0) {
-          // Note On message
-          const frequency = document.getElementById("frequency").value;
-          const rootKey = document.getElementById("rootKey").value;
-          sendNoteToRust(note, parseFloat(frequency), rootKey);
-        }
+    navigator.requestMIDIAccess().then((access) => {
+      const inputs = access.inputs.values();
+      for (let input of inputs) {
+        input.onmidimessage = onMIDIMessage;
       }
+    });
+  </script>
+</body>
 
-      navigator.requestMIDIAccess().then((access) => {
-        const inputs = access.inputs.values();
-        for (let input of inputs) {
-          input.onmidimessage = onMIDIMessage;
-        }
-      });
-    </script>
-  </body>
 </html>
