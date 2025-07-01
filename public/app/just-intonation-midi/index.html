@@ -58,10 +58,19 @@
     }
 
     navigator.requestMIDIAccess().then((access) => {
+      console.log("MIDI access granted");
       const inputs = access.inputs.values();
+      let inputCount = 0;
       for (let input of inputs) {
+        console.log("MIDI input found:", input.name);
         input.onmidimessage = onMIDIMessage;
+        inputCount++;
       }
+      document.getElementById("output").textContent = inputCount > 0 ? 
+        `MIDI ready (${inputCount} devices)` : "No MIDI devices found";
+    }).catch((error) => {
+      console.error("MIDI access failed:", error);
+      document.getElementById("output").textContent = "MIDI access denied: " + error.message;
     });
   </script>
 </body>
