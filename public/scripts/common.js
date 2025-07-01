@@ -215,11 +215,9 @@ function log(num) {
     message +=
       '<a href="/app/just-intonation-midi/" target="_blank" rel="noreferrer noopener">/app/just-intonation-midi/</a>';
   } else if (num == 4) {
-    /*
-    message += "ポートフォリオ(Scrapbox)<br>";
+    message += "IGRAM LAB｜音響音楽研究所<br>";
     message +=
-      '<a href="https://scrapbox.io/igram-portfolio/" target="_blank" rel="noreferrer noopener">https://scrapbox.io/igram-portfolio/<a/>';
-    */
+      '<a href="https://www.youtube.com/@igramlab" target="_blank" rel="noreferrer noopener">https://www.youtube.com/@igramlab<a/>';
   } else if (num == 5) {
   } else if (num == 6) {
   } else if (num == 7) {
