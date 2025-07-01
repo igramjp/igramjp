@@ -1,82 +1,62 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <!-- Google tag (gtag.js) -->
-    <script
-      async
-      src="https://www.googletagmanager.com/gtag/js?id=G-Q5LKFG5Z7Z"
-    ></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag() {
-        dataLayer.push(arguments);
-      }
-      gtag("js", new Date());
 
-      gtag("config", "G-Q5LKFG5Z7Z");
-    </script>
+<head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-Q5LKFG5Z7Z"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag("js", new Date());
 
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
-    <meta name="format-detection" content="address=no,email=no,telephone=no" />
-    <meta name="keywords" content="" />
-    <meta
-      name="description"
-      content="Manabu Igarashi is programmer based in Shinshu, Japan."
-    />
-    <meta name="author" content="Manabu Igarashi" />
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://igram.jp/" />
-    <meta property="og:image" content="" />
-    <meta property="og:site_name" content="igram.jp" />
-    <meta property="og:title" content="igram.jp" />
-    <meta
-      property="og:description"
-      content="Manabu Igarashi is programmer based in Shinshu, Japan."
-    />
-    <meta http-equiv="x-dns-prefetch-control" content="on" />
-    <link rel="dns-prefetch" href="//igram.jp" />
-    <link rel="dns-prefetch" href="//fonts.googleapis.com" />
-    <link rel="dns-prefetch" href="//ajax.googleapis.com" />
-    <link
-      rel="preconnect"
-      href="//fonts.googleapis.com/css?family=Inconsolata"
-      crossorigin
-    />
-    <link
-      rel="preconnect"
-      href="//ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"
-      crossorigin
-    />
-    <link rel="preload" href="/stylesheets/common.css" as="style" />
-    <link rel="preload" href="/scripts/common.js" as="script" />
-    <link
-      rel="stylesheet"
-      href="//fonts.googleapis.com/css?family=Inconsolata"
-    />
-    <link rel="stylesheet" href="/stylesheets/common.css" />
-    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
-    <link rel="canonical" href="https://igram.jp/" />
-    <title>igram.jp</title>
-  </head>
+    gtag("config", "G-Q5LKFG5Z7Z");
+  </script>
 
-  <body>
-    <canvas id="canvas"></canvas>
-    <div id="log"></div>
-    <div id="news"></div>
-    <div class="object group1 main" onclick="log(1);">
-      <span></span>MANABU IGARASHI
-    </div>
-    <!--<div class="object group1 args" onclick="log(2);"><span></span>GITHUB</div>-->
-    <!--<div class="object group1 args" onclick="log(3);"><span></span>TWITTER</div>-->
-    <div class="object group2 main" onclick="log(4);">
-      <span></span>PROGRAMMER
-    </div>
-    <!--<div class="object group2 args" onclick="log(5);"><span></span>RUST</div>-->
-    <!--<div class="object group1 args" onclick="log(6);"><span></span>MAX/SUPER COLLIDER</div>-->
-    <!--<div class="object group3 main new" onclick="javascript:location.href='/portfolio/';"><span></span>PORTFOLIO</div>-->
-    <div class="object group3 main" onclick="log(8);"><span></span>CONTACT</div>
-    <script src="/scripts/jquery-3.3.1.min.js"></script>
-    <script src="/scripts/common.js"></script>
-  </body>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <meta name="format-detection" content="address=no,email=no,telephone=no" />
+  <meta name="keywords" content="" />
+  <meta name="description" content="Manabu Igarashi is programmer based in Shinshu, Japan." />
+  <meta name="author" content="Manabu Igarashi" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://igram.jp/" />
+  <meta property="og:image" content="" />
+  <meta property="og:site_name" content="igram.jp" />
+  <meta property="og:title" content="igram.jp" />
+  <meta property="og:description" content="Manabu Igarashi is programmer based in Shinshu, Japan." />
+  <meta http-equiv="x-dns-prefetch-control" content="on" />
+  <link rel="dns-prefetch" href="//igram.jp" />
+  <link rel="dns-prefetch" href="//fonts.googleapis.com" />
+  <link rel="dns-prefetch" href="//ajax.googleapis.com" />
+  <link rel="preconnect" href="//fonts.googleapis.com/css?family=Inconsolata" crossorigin />
+  <link rel="preconnect" href="//ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js" crossorigin />
+  <link rel="preload" href="/stylesheets/common.css" as="style" />
+  <link rel="preload" href="/scripts/common.js" as="script" />
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Inconsolata" />
+  <link rel="stylesheet" href="/stylesheets/common.css" />
+  <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+  <link rel="canonical" href="https://igram.jp/" />
+  <title>igram.jp</title>
+</head>
+
+<body>
+  <canvas id="canvas"></canvas>
+  <div id="log"></div>
+  <div id="news"></div>
+  <div class="object group1 main" onclick="log(1);">
+    <span></span>MANABU IGARASHI
+  </div>
+  <div class="object group2 main" onclick="log(2);"><span></span>PROGRAMMER</div>
+  <div class="object group2 args" onclick="log(3);"><span></span>APP</div>
+  <!--<div class="object group2 args" onclick="log(4);"><span></span></div>-->
+  <!--<div class="object group2 args" onclick="log(5);"><span></span></div>-->
+  <!--<div class="object group2 args" onclick="log(6);"><span></span></div>-->
+  <!--<div class="object group3 main new" onclick="javascript:location.href='/portfolio/';"><span></span>PORTFOLIO</div>-->
+  <div class="object group4 main" onclick="log(8);"><span></span>CONTACT</div>
+  <script src="/scripts/jquery-3.3.1.min.js"></script>
+  <script src="/scripts/common.js"></script>
+</body>
+
 </html>

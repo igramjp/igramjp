@@ -22,7 +22,7 @@ function mdown(e) {
   try {
     document.body.addEventListener("mousemove", mmove, false);
     document.body.addEventListener("touchmove", mmove, false);
-  } catch (e) {}
+  } catch (e) { }
 }
 /* mouse move */
 function mmove(e) {
@@ -56,7 +56,7 @@ function mmove(e) {
     document.body.addEventListener("mouseleave", mup, false);
     drag.addEventListener("touchend", mup, false);
     document.body.addEventListener("touchleave", mup, false);
-  } catch (e) {}
+  } catch (e) { }
 }
 /* mouse up */
 function mup(e) {
@@ -67,7 +67,7 @@ function mup(e) {
     document.body.removeEventListener("touchmove", mmove, false);
     drag.removeEventListener("touchend", mup, false);
     drag.classList.remove("drag");
-  } catch (e) {}
+  } catch (e) { }
 }
 /* lines */
 var bodyStyles = window.getComputedStyle(document.body);
@@ -211,9 +211,9 @@ function log(num) {
     message +=
       '<a href="//github.com/igramjp" target="_blank" rel="noreferrer noopener">https://github.com/igramjp</a>';
   } else if (num == 3) {
-    message += "Twitter<br>";
+    message += "Real-Time Just Intonation Frequencies – A Web MIDI Experiment<br>";
     message +=
-      '<a href="//twitter.com/igramjp" target="_blank" rel="noreferrer noopener">https://twitter.com/igramjp</a>';
+      '<a href="/app/just-intonation-midi/" target="_blank" rel="noreferrer noopener">/app/just-intonation-midi/</a>';
   } else if (num == 4) {
     /*
     message += "ポートフォリオ(Scrapbox)<br>";
