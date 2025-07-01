@@ -25,7 +25,13 @@
     Content-Type = "text/html"
 
 [[headers]]
-  for = "/app/just-intonation-midi/pkg/*"
+  for = "/app/just-intonation-midi/pkg/*.js"
+  [headers.values]
+    Content-Type = "application/javascript"
+    Cache-Control = "public, max-age=31536000"
+
+[[headers]]
+  for = "/app/just-intonation-midi/js/*.js"
   [headers.values]
     Content-Type = "application/javascript"
     Cache-Control = "public, max-age=31536000"
