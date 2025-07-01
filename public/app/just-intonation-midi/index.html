@@ -5,7 +5,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Real-Time Just Intonation Frequencies – A Web MIDI Experiment | igram.jp</title>
-  <link href="static/output.css" rel="stylesheet" />
+  <link href="./static/output.css" rel="stylesheet" />
 </head>
 
 <body class="bg-white p-4">
@@ -40,15 +40,9 @@
     import { log_to_js } from "./js/helpers.js";
 
     async function run() {
-      try {
-        await init();
-        window.log_to_js = log_to_js;
-        window.sendNoteToRust = send_note_to_rust;
-        console.log('WASM初期化完了');
-      } catch (error) {
-        console.error('WASM初期化エラー:', error);
-        document.getElementById("output").textContent = "WASM初期化エラー: " + error.message;
-      }
+      await init();
+      window.log_to_js = log_to_js;
+      window.sendNoteToRust = send_note_to_rust;
     }
 
     run();
@@ -64,19 +58,10 @@
     }
 
     navigator.requestMIDIAccess().then((access) => {
-      console.log("MIDI access granted");
       const inputs = access.inputs.values();
-      let inputCount = 0;
       for (let input of inputs) {
-        console.log("MIDI input found:", input.name);
         input.onmidimessage = onMIDIMessage;
-        inputCount++;
       }
-      document.getElementById("output").textContent = inputCount > 0 ?
-        `MIDI ready (${inputCount} devices)` : "No MIDI devices found";
-    }).catch((error) => {
-      console.error("MIDI access failed:", error);
-      document.getElementById("output").textContent = "MIDI access denied: " + error.message;
     });
   </script>
 </body>
