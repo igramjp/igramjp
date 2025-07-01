@@ -42,7 +42,29 @@
     Content-Type = "application/wasm"
     Cache-Control = "public, max-age=31536000"
 
+# 静的ファイルの配信を優先
 [[redirects]]
-  from = "/app/just-intonation-midi/*"
+  from = "/app/just-intonation-midi/pkg/*"
+  to = "/app/just-intonation-midi/pkg/:splat"
+  status = 200
+
+[[redirects]]
+  from = "/app/just-intonation-midi/js/*"
+  to = "/app/just-intonation-midi/js/:splat"
+  status = 200
+
+[[redirects]]
+  from = "/app/just-intonation-midi/static/*"
+  to = "/app/just-intonation-midi/static/:splat"
+  status = 200
+
+# SPAルーティング
+[[redirects]]
+  from = "/app/just-intonation-midi/"
+  to = "/app/just-intonation-midi/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/app/just-intonation-midi"
   to = "/app/just-intonation-midi/index.html"
   status = 200 
