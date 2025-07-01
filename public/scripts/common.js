@@ -229,6 +229,7 @@ function log(num) {
   $("#log").html(message);
 }
 
+/*
 $(document).ready(function () {
   // slack api: conversations.history
   async function getToken() {
@@ -306,3 +307,4 @@ $(document).ready(function () {
   }
   chatGPT();
 });
+*/
