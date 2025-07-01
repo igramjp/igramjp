@@ -1,0 +1,14 @@
+{
+  "name": "midi_web",
+  "version": "0.1.0",
+  "files": [
+    "midi_web_bg.wasm",
+    "midi_web.js",
+    "midi_web.d.ts"
+  ],
+  "module": "midi_web.js",
+  "types": "midi_web.d.ts",
+  "sideEffects": [
+    "./snippets/*"
+  ]
+}
