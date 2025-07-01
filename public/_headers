@@ -1,10 +1,10 @@
 /app/just-intonation-midi/pkg/*.js
   Content-Type: application/javascript
-  Cache-Control: public, max-age=31536000
+  Cache-Control: no-cache, no-store, must-revalidate
 
 /app/just-intonation-midi/js/*.js
   Content-Type: application/javascript
-  Cache-Control: public, max-age=31536000
+  Cache-Control: no-cache, no-store, must-revalidate
 
 /app/just-intonation-midi/pkg/*.wasm
   Content-Type: application/wasm
