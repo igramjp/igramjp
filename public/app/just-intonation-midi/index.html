@@ -36,8 +36,8 @@
     Waiting for MIDI input...
   </div>
   <script type="module">
-    import init, { send_note_to_rust } from "./pkg/midi_web.js";
-    import { log_to_js } from "./js/helpers.js";
+    import init, { send_note_to_rust } from "/app/just-intonation-midi/pkg/midi_web.js";
+    import { log_to_js } from "/app/just-intonation-midi/js/helpers.js";
 
     async function run() {
       await init();
