@@ -128,6 +128,16 @@ var update = function () {
             eval("object" + j).x,
             eval("object" + j).y
           );
+        } else if (
+          elements[j].classList.contains("group5") &&
+          elements[j].classList.contains("main")
+        ) {
+          drawLine(
+            eval("object" + i).x,
+            eval("object" + i).y,
+            eval("object" + j).x,
+            eval("object" + j).y
+          );
         }
       }
     } else if (
@@ -172,6 +182,20 @@ var update = function () {
           );
         }
       }
+    } else if (
+      elements[i].classList.contains("group5") &&
+      elements[i].classList.contains("main")
+    ) {
+      for (var j = 0; j < elements.length; j++) {
+        if (elements[j].classList.contains("group5")) {
+          drawLine(
+            eval("object" + i).x,
+            eval("object" + i).y,
+            eval("object" + j).x,
+            eval("object" + j).y
+          );
+        }
+      }
     }
   }
 };
@@ -205,26 +229,40 @@ function log(num) {
   var message = "";
   if (num == 1) {
     message += "五十嵐学<br>";
-    message += "諏訪・八ヶ岳西麓在住，プログラマー．";
-  } else if (num == 2) {
+    message += "諏訪・八ヶ岳西麓在住、プログラマー。<br>";
+    message += "Manabu Igarashi<br>";
+    message += "Programmer based in Suwa, Japan.<br>";
     message += "GitHub<br>";
     message +=
       '<a href="//github.com/igramjp" target="_blank" rel="noreferrer noopener">https://github.com/igramjp</a>';
+  } else if (num == 2) {
+    message += "CONTACT｜お問い合わせ<br>";
+    message += "ご質問やご相談などありましたら、こちらのフォームよりお気軽にお問い合わせください。<br>";
+    message += "If you have any questions or inquiries, please feel free to contact me using the form below.<br>";
+    message +=
+      '<a href="https://forms.gle/9kQKMp8ajEr3vf716" target="_blank" rel="noreferrer noopener">https://forms.gle/9kQKMp8ajEr3vf716</a>';
   } else if (num == 3) {
+    message += "IGRAM LAB｜音響音楽研究所<br>";
+    message += "SuperColliderを使った音響実験や、現代音楽についての考察をYouTubeで配信しています。<br>";
+    message += "I'm sharing sonic experiments with SuperCollider and reflections on contemporary music on YouTube.<br>";
+    message +=
+      '<a href="https://www.youtube.com/@igramlab" target="_blank" rel="noreferrer noopener">https://www.youtube.com/@igramlab<a/>';
+  } else if (num == 4) {
+    message += "リアルタイム純正律周波数 ― Web MIDIによる実験アプリ<br>";
     message += "Real-Time Just Intonation Frequencies – A Web MIDI Experiment<br>";
     message +=
       '<a href="/app/just-intonation-midi/" target="_blank" rel="noreferrer noopener">/app/just-intonation-midi/</a>';
-  } else if (num == 4) {
-    message += "IGRAM LAB｜音響音楽研究所<br>";
-    message +=
-      '<a href="https://www.youtube.com/@igramlab" target="_blank" rel="noreferrer noopener">https://www.youtube.com/@igramlab<a/>';
   } else if (num == 5) {
+    message += "IGRAM NETWORK<br>";
+    message += "Coming soon<br>";
   } else if (num == 6) {
+    message += "竹音（ちくおん／bamboo music）<br>";
+    message += "日本を拠点とするインディペンデントな音楽レーベル兼アート・インプリントです。<br>";
+    message += " bamboo music is an independent record label and art imprint based in Japan.<br>";
+    message +=
+      '<a href="https://bamboomusic.asia/" target="_blank" rel="noreferrer noopener">https://bamboomusic.asia/</a>';
   } else if (num == 7) {
   } else if (num == 8) {
-    message += "お問い合わせ(Google Form)<br>";
-    message +=
-      '<a href="https://forms.gle/SrzU23uXsDD79jiX8" target="_blank" rel="noreferrer noopener">https://forms.gle/SrzU23uXsDD79jiX8</a>';
   }
   $("#log").html(message);
 }
