@@ -333,7 +333,7 @@ $(document).ready(function () {
   getNews();
 
   // 3D
-  let isZero = true;
+  let isZero = false;
 
   function getRandomDeg() {
     return Math.floor(Math.random() * 91) - 45;
