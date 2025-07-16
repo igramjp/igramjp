@@ -281,6 +281,7 @@ function log(num) {
     message +=
       '<a href="https://forms.gle/9kQKMp8ajEr3vf716" target="_blank" rel="noreferrer noopener">https://forms.gle/9kQKMp8ajEr3vf716</a>';
   }
+  $("#news").hide();
   $("#log").html(message);
 }
 
