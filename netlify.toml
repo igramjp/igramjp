@@ -68,3 +68,6 @@
   from = "/app/just-intonation-midi"
   to = "/app/just-intonation-midi/index.html"
   status = 200 
+
+[functions]
+  directory = "netlify/functions"

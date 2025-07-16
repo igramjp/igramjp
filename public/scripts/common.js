@@ -286,12 +286,10 @@ function log(num) {
   $("#log").html(message);
 }
 
-/*
 $(document).ready(function () {
-  // slack api: conversations.history
-  async function getToken() {
+  async function getNews() {
     try {
-      const url = "https://igram.jp/scripts/slack-api.php";
+      const url = "/.netlify/functions/slack-api";
       const response = await fetch(url);
 
       if (!response.ok) {
@@ -299,10 +297,9 @@ $(document).ready(function () {
       }
 
       const data = await response.json();
-      // console.log("Conversations History:", data);
 
       if (data.ok && Array.isArray(data.messages)) {
-        var news = "";
+        let news = "";
         data.messages.forEach((message) => {
           const ts = message.ts;
           const date = new Date(Math.floor(parseFloat(ts) * 1000));
@@ -320,48 +317,15 @@ $(document).ready(function () {
             (url) => `<a href="${url}" target="_blank">${url}</a>`
           );
 
-          news =
-            news + "<tt>" + formattedDate + "</tt><div>" + result + "</div>";
+          news += `<tt>${formattedDate}</tt><div>${result}</div>`;
         });
         $("#news").append(news);
       }
     } catch (error) {
-      // console.error("Error during fetch operation: ", error.message);
+      console.error("Slack fetch error:", error.message);
     }
   }
-  getToken();
 
-  // chatgpt api
-  async function chatGPT() {
-    try {
-      const url = "https://igram.jp/scripts/chatgpt-api.php";
-      const response = await fetch(url);
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
-
-      const data = await response.json();
-      const text = data.choices[0].message.content;
-      const replacedText = text.replace(/。/g, "．").replace(/、/g, "，");
-      const today = new Date();
-      const year = today.getFullYear();
-      const month = (today.getMonth() + 1).toString().padStart(2, "0");
-      const day = today.getDate().toString().padStart(2, "0");
-      const formattedDate = `${year}-${month}-${day}`;
-
-      var news =
-        "<tt>" +
-        formattedDate +
-        " ChatGPT" +
-        "</tt><div>" +
-        replacedText +
-        "</div>";
-      $("#news").prepend(news);
-    } catch (error) {
-      // console.error("Error during fetch operation: ", error.message);
-    }
-  }
-  chatGPT();
+  getNews();
 });
-*/
+
