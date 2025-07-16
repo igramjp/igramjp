@@ -52,6 +52,7 @@ body {
   height: 100%;
   overflow-x: hidden;
   overflow-y: scroll;
+  transition: transform 60s;
   transform-style: preserve-3d;
   perspective: 1000px;
 }

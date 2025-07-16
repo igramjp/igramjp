@@ -336,24 +336,12 @@ $(document).ready(function () {
   let isZero = true;
 
   function getRandomDeg() {
-    return Math.floor(Math.random() * 721) - 360;
+    return Math.floor(Math.random() * 181) - 90;
   }
 
-  function getRandomTransitionDuration() {
-    return Math.floor(Math.random() * 4001);
-  }
-
-  function getRandomDelay() {
-    return Math.floor(Math.random() * 12001) + 4000;
-  }
-
-  function applyTransform() {
-    const body = document.body;
-
-    const duration = getRandomTransitionDuration();
-    body.style.transition = `transform ${duration / 1000}s`;
-
+  function updateTransform() {
     let x, y, z;
+
     if (isZero) {
       x = y = z = 0;
     } else {
@@ -362,17 +350,14 @@ $(document).ready(function () {
       z = getRandomDeg();
     }
 
-    body.style.transform = `rotateX(${x}deg) rotateY(${y}deg) rotateZ(${z}deg)`;
+    document.body.style.transform = `rotateX(${x}deg) rotateY(${y}deg) rotateZ(${z}deg)`;
     console.log(`Transform: rotateX(${x}) rotateY(${y}) rotateZ(${z})`);
-    console.log(`Transition duration: ${duration / 1000}s`);
 
     isZero = !isZero;
-
-    const nextDelay = getRandomDelay();
-    console.log(`Next update in ${nextDelay / 1000}s`);
-    setTimeout(applyTransform, nextDelay);
   }
 
-  applyTransform();
+  updateTransform();
+
+  setInterval(updateTransform, 60 * 1000);
 });
 
