@@ -333,10 +333,10 @@ $(document).ready(function () {
   getNews();
 
   // 3D
-  let isZero = true; // 初回は0degをセット、その後交互に変化
+  let isZero = true;
 
   function getRandomDeg() {
-    return Math.floor(Math.random() * 721) - 360; // -360〜360
+    return Math.floor(Math.random() * 721) - 360;
   }
 
   function updateTransform() {
@@ -353,13 +353,11 @@ $(document).ready(function () {
     document.body.style.transform = `rotateX(${x}deg) rotateY(${y}deg) rotateZ(${z}deg)`;
     console.log(`Transform: rotateX(${x}) rotateY(${y}) rotateZ(${z})`);
 
-    isZero = !isZero; // 次回は反対に
+    isZero = !isZero;
   }
 
-  // 初回は 0deg でスタート
   updateTransform();
 
-  // 60秒ごとに交互に実行
-  setInterval(updateTransform, 60 * 1000);
+  setInterval(updateTransform, 30 * 1000);
 });
 
