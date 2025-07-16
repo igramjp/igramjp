@@ -256,12 +256,10 @@ function log(num) {
     message +=
       '<a href="https://www.youtube.com/@igramlab" target="_blank" rel="noreferrer noopener">https://www.youtube.com/@igramlab<a/>';
   } else if (num == 4) {
-    message += "IGRAM RESEARCH<br>";
     message += "IGRAM RESEARCH（note）<br>";
     message += "音響表現の背景にある技術や思想を記録・考察しています。SuperColliderやMaxのコードに宿る思考を言葉にします。<br>";
     message += "Exploring the techniques and ideas behind sonic expression. Turning the thoughts embedded in SuperCollider and Max code into words.<br>";
   } else if (num == 5) {
-    message += "IGRAM NETWORK<br>";
     message += "IGRAM NETWORK（Discord）<br>";
     message += "音響プログラミングに関心のある人々が集うコミュニティです。コードや音、対話を通じてゆるやかにつながります。<br>";
     message += "A community for those interested in sound programming. Connecting through code, sound, and conversation.<br>";
