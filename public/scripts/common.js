@@ -339,14 +339,18 @@ $(document).ready(function () {
     return Math.floor(Math.random() * 721) - 360;
   }
 
+  function getRandomTransitionDuration() {
+    return Math.floor(Math.random() * 4001);
+  }
+
   function getRandomDelay() {
-    return Math.floor(Math.random() * 30001);
+    return Math.floor(Math.random() * 12001) + 4000;
   }
 
   function applyTransform() {
     const body = document.body;
 
-    const duration = getRandomDelay();
+    const duration = getRandomTransitionDuration();
     body.style.transition = `transform ${duration / 1000}s`;
 
     let x, y, z;
