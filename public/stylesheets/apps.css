@@ -47,7 +47,6 @@ body {
   -ms-text-size-adjust: 100%;
   -o-text-size-adjust: 100%;
   text-size-adjust: 100%;
-  -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -webkit-overflow-scrolling: touch;
   width: 100%;
