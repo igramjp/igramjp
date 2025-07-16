@@ -6,6 +6,9 @@ exports.handler = async function (event, context) {
   const SLACK_BOT_TOKEN = process.env.SLACK_BOT_TOKEN;
   const CHANNEL_ID = "C096NHNUG7J"; // #news のチャンネルID
 
+  console.log(SLACK_BOT_TOKEN);
+  console.log(CHANNEL_ID);
+
   try {
     const response = await fetch(`https://slack.com/api/conversations.history?channel=${CHANNEL_ID}&limit=10`, {
       headers: {
