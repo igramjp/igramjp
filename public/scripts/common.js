@@ -351,7 +351,6 @@ $(document).ready(function () {
     }
 
     document.body.style.transform = `rotateX(${x}deg) rotateY(${y}deg) rotateZ(${z}deg)`;
-    console.log(`Transform: rotateX(${x}) rotateY(${y}) rotateZ(${z})`);
 
     isZero = !isZero;
   }
