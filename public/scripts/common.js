@@ -336,7 +336,7 @@ $(document).ready(function () {
   let isZero = true;
 
   function getRandomDeg() {
-    return Math.floor(Math.random() * 181) - 90;
+    return Math.floor(Math.random() * 181) - 45;
   }
 
   function updateTransform() {
