@@ -236,25 +236,22 @@ function log(num) {
     message +=
       '<a href="//github.com/igramjp" target="_blank" rel="noreferrer noopener">https://github.com/igramjp</a>';
   } else if (num == 2) {
-    message += "CONTACT｜お問い合わせ<br>";
-    message += "ご質問やご相談などありましたら、こちらのフォームよりお気軽にお問い合わせください。<br>";
-    message += "If you have any questions or inquiries, please feel free to contact me using the form below.<br>";
-    message +=
-      '<a href="https://forms.gle/9kQKMp8ajEr3vf716" target="_blank" rel="noreferrer noopener">https://forms.gle/9kQKMp8ajEr3vf716</a>';
-  } else if (num == 3) {
     message += "IGRAM LAB｜音響音楽研究所<br>";
     message += "SuperColliderを使った音響実験や、現代音楽についての考察をYouTubeで配信しています。<br>";
     message += "I'm sharing sonic experiments with SuperCollider and reflections on contemporary music on YouTube.<br>";
     message +=
       '<a href="https://www.youtube.com/@igramlab" target="_blank" rel="noreferrer noopener">https://www.youtube.com/@igramlab<a/>';
+  } else if (num == 3) {
+    message += "IGRAM RESEARCH<br>";
+    message += "Coming Soon<br>";
   } else if (num == 4) {
+    message += "IGRAM NETWORK<br>";
+    message += "Coming Soon<br>";
+  } else if (num == 5) {
     message += "リアルタイム純正律周波数 ― Web MIDIによる実験アプリ<br>";
     message += "Real-Time Just Intonation Frequencies – A Web MIDI Experiment<br>";
     message +=
       '<a href="/app/just-intonation-midi/" target="_blank" rel="noreferrer noopener">/app/just-intonation-midi/</a>';
-  } else if (num == 5) {
-    message += "IGRAM NETWORK<br>";
-    message += "Coming soon<br>";
   } else if (num == 6) {
     message += "竹音（ちくおん／bamboo music）<br>";
     message += "日本を拠点とするインディペンデントな音楽レーベル兼アート・インプリントです。<br>";
@@ -262,6 +259,11 @@ function log(num) {
     message +=
       '<a href="https://bamboomusic.asia/" target="_blank" rel="noreferrer noopener">https://bamboomusic.asia/</a>';
   } else if (num == 7) {
+    message += "CONTACT｜お問い合わせ<br>";
+    message += "ご質問やご相談などありましたら、こちらのフォームよりお気軽にお問い合わせください。<br>";
+    message += "If you have any questions or inquiries, please feel free to contact me using the form below.<br>";
+    message +=
+      '<a href="https://forms.gle/9kQKMp8ajEr3vf716" target="_blank" rel="noreferrer noopener">https://forms.gle/9kQKMp8ajEr3vf716</a>';
   } else if (num == 8) {
   }
   $("#log").html(message);
