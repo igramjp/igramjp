@@ -245,10 +245,14 @@ function log(num) {
     message += "IGRAM RESEARCH（note）<br>";
     message += "音響表現の背景にある技術や思想を記録・考察しています。SuperColliderやMaxのコードに宿る思考を言葉にします。<br>";
     message += "Exploring the techniques and ideas behind sonic expression. Turning the thoughts embedded in SuperCollider and Max code into words.<br>";
+    message +=
+      '<a href="https://note.com/igram/membership" target="_blank" rel="noreferrer noopener">https://note.com/igram/membership<a/>';
     message += "<br>";
     message += "IGRAM NETWORK（Discord）<br>";
     message += "音響プログラミングに関心のある人々が集うコミュニティです。コードや音、対話を通じてゆるやかにつながります。<br>";
     message += "A community for those interested in sound programming. Connecting through code, sound, and conversation.<br>";
+    message +=
+      '<a href="https://discord.gg/Vddn4Z3Jrp" target="_blank" rel="noreferrer noopener">https://discord.gg/Vddn4Z3Jrp<a/>';
   } else if (num == 3) {
     message += "IGRAM LAB (YouTube)<br>";
     message += "音響プログラミングの実験や演奏を映像で公開しています。耳で聴き、目で見る「音の現象」を共有する実験室です。<br>";
@@ -259,10 +263,14 @@ function log(num) {
     message += "IGRAM RESEARCH（note）<br>";
     message += "音響表現の背景にある技術や思想を記録・考察しています。SuperColliderやMaxのコードに宿る思考を言葉にします。<br>";
     message += "Exploring the techniques and ideas behind sonic expression. Turning the thoughts embedded in SuperCollider and Max code into words.<br>";
+    message +=
+      '<a href="https://note.com/igram/membership" target="_blank" rel="noreferrer noopener">https://note.com/igram/membership<a/>';
   } else if (num == 5) {
     message += "IGRAM NETWORK（Discord）<br>";
     message += "音響プログラミングに関心のある人々が集うコミュニティです。コードや音、対話を通じてゆるやかにつながります。<br>";
     message += "A community for those interested in sound programming. Connecting through code, sound, and conversation.<br>";
+    message +=
+      '<a href="https://discord.gg/Vddn4Z3Jrp" target="_blank" rel="noreferrer noopener">https://discord.gg/Vddn4Z3Jrp<a/>';
   } else if (num == 6) {
     message += "リアルタイム純正律周波数 ― Web MIDIによる実験アプリ<br>";
     message += "Real-Time Just Intonation Frequencies – A Web MIDI Experiment<br>";
