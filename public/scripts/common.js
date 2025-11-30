@@ -341,15 +341,16 @@ $(document).ready(function () {
   getNews();
 
   // 3D
+  /*
   let isZero = false;
-
+  
   function getRandomDeg() {
     return Math.floor(Math.random() * 91) - 45;
   }
-
+  
   function updateTransform() {
     let x, y, z;
-
+  
     if (isZero) {
       x = y = z = 0;
     } else {
@@ -357,14 +358,15 @@ $(document).ready(function () {
       y = getRandomDeg();
       z = getRandomDeg();
     }
-
+  
     document.body.style.transform = `rotateX(${x}deg) rotateY(${y}deg) rotateZ(${z}deg)`;
-
+  
     isZero = !isZero;
   }
-
+  
   updateTransform();
-
+  
   setInterval(updateTransform, 60 * 1000);
+  */
 });
 
