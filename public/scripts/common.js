@@ -244,7 +244,7 @@ function log(num) {
     message +=
       '<a href="https://www.youtube.com/@igramlab" target="_blank" rel="noreferrer noopener">https://www.youtube.com/@igramlab<a/>';
   } else if (num == 4) {
-    message += "LIVE<br>";
+    message += "IGRAM LIVE<br>";
     message += "楽器演奏に特化した高音質ビデオチャット。<br>ノイキャン・エコーキャンセル・ノイズ抑制をすべてオフにし、320kbpsステレオで原音をそのまま伝送。ブラウザのみで即利用可能。Web会議ツールでは失われる音楽の繊細さを届ける。<br>";
     message += "A high-quality video chat for musicians. Delivers raw audio in 320kbps stereo with all noise cancellation, echo cancellation, and noise suppression disabled. Works instantly in browser — no app required. Preserves the subtle nuances of music that typical tools like Zoom destroy.<br>";
     message +=
