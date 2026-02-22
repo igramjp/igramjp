@@ -244,18 +244,23 @@ function log(num) {
     message +=
       '<a href="https://www.youtube.com/@igramlab" target="_blank" rel="noreferrer noopener">https://www.youtube.com/@igramlab<a/>';
   } else if (num == 4) {
+    message += "LIVE<br>";
+    message += "楽器演奏に特化した高音質ビデオチャット。ノイキャン・エコーキャンセル・ノイズ抑制をすべてオフにし、320kbpsステレオで原音をそのまま伝送。ブラウザのみで即利用可能。ZoomなどのWeb会議ツールでは失われる音楽の繊細さを届ける。<br>";
+    message += "A high-quality video chat for musicians. Delivers raw audio in 320kbps stereo with all noise cancellation, echo cancellation, and noise suppression disabled. Works instantly in browser — no app required. Preserves the subtle nuances of music that typical tools like Zoom destroy.<br>";
+    message +=
+      '<a href="https://live.igram.jp/" target="_blank" rel="noreferrer noopener">https://live.igram.jp/</a>';
+  } else if (num == 5) {
     message += "リアルタイム純正律周波数 ― Web MIDIによる実験アプリ<br>";
     message += "Real-Time Just Intonation Frequencies – A Web MIDI Experiment<br>";
     message +=
       '<a href="/app/just-intonation-midi/" target="_blank" rel="noreferrer noopener">/app/just-intonation-midi/</a>';
-  } else if (num == 5) {
+  } else if (num == 6) {
     message += "竹音（ちくおん／bamboo music）<br>";
     message += "日本を拠点とするインディペンデントな音楽レーベル兼アート・インプリントです。<br>";
     message += " bamboo music is an independent record label and art imprint based in Japan.<br>";
     message +=
       '<a href="https://bamboomusic.asia/" target="_blank" rel="noreferrer noopener">https://bamboomusic.asia/</a>';
-  } else if (num == 6
-  ) {
+  } else if (num == 7) {
     message += "CONTACT (Google Forms)<br>";
     message += "ご質問やご相談などありましたら、こちらのフォームよりお気軽にお問い合わせください。<br>";
     message += "If you have any questions or inquiries, please feel free to contact me using the form below.<br>";
@@ -316,30 +321,30 @@ $(document).ready(function () {
   // 3D
   /*
   let isZero = false;
-  
+
   function getRandomDeg() {
     return Math.floor(Math.random() * 91) - 45;
   }
-  
-  function updateTransform() {
-    let x, y, z;
-  
-    if (isZero) {
-      x = y = z = 0;
+
+                  function updateTransform() {
+                    let x, y, z;
+
+                  if (isZero) {
+                    x = y = z = 0;
     } else {
-      x = getRandomDeg();
-      y = getRandomDeg();
-      z = getRandomDeg();
+                    x = getRandomDeg();
+                  y = getRandomDeg();
+                  z = getRandomDeg();
     }
-  
-    document.body.style.transform = `rotateX(${x}deg) rotateY(${y}deg) rotateZ(${z}deg)`;
-  
-    isZero = !isZero;
+
+                  document.body.style.transform = `rotateX(${x}deg) rotateY(${y}deg) rotateZ(${z}deg)`;
+
+                  isZero = !isZero;
   }
-  
-  updateTransform();
-  
-  setInterval(updateTransform, 60 * 1000);
-  */
+
+                  updateTransform();
+
+                  setInterval(updateTransform, 60 * 1000);
+                  */
 });
 
