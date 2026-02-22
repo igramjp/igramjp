@@ -236,23 +236,7 @@ function log(num) {
     message +=
       '<a href="//github.com/igramjp" target="_blank" rel="noreferrer noopener">https://github.com/igramjp</a>';
   } else if (num == 2) {
-    message += "IGRAM LAB (YouTube)<br>";
-    message += "音響プログラミングの実験や演奏を映像で公開しています。耳で聴き、目で見る「音の現象」を共有する実験室です。<br>";
-    message += "Experiments and performances in sound programming, shared through video. A lab for exploring sonic phenomena you can see and hear.<br>";
-    message +=
-      '<a href="https://www.youtube.com/@igramlab" target="_blank" rel="noreferrer noopener">https://www.youtube.com/@igramlab<a/><br>';
-    message += "<br>";
-    message += "IGRAM RESEARCH（note）<br>";
-    message += "音響表現の背景にある技術や思想を記録・考察しています。SuperColliderやMaxのコードに宿る思考を言葉にします。<br>";
-    message += "Exploring the techniques and ideas behind sonic expression. Turning the thoughts embedded in SuperCollider and Max code into words.<br>";
-    message +=
-      '<a href="https://note.com/igram/membership" target="_blank" rel="noreferrer noopener">https://note.com/igram/membership<a/>';
-    message += "<br>";
-    message += "IGRAM NETWORK（Discord）<br>";
-    message += "音響プログラミングに関心のある人々が集うコミュニティです。コードや音、対話を通じてゆるやかにつながります。<br>";
-    message += "A community for those interested in sound programming. Connecting through code, sound, and conversation.<br>";
-    message +=
-      '<a href="https://discord.gg/Vddn4Z3Jrp" target="_blank" rel="noreferrer noopener">https://discord.gg/Vddn4Z3Jrp<a/>';
+    message += "©︎ " + "igram" + " " + new Date().getFullYear() + " " + "All rights reserved.<br>";
   } else if (num == 3) {
     message += "IGRAM LAB (YouTube)<br>";
     message += "音響プログラミングの実験や演奏を映像で公開しています。耳で聴き、目で見る「音の現象」を共有する実験室です。<br>";
@@ -270,12 +254,13 @@ function log(num) {
     message += " bamboo music is an independent record label and art imprint based in Japan.<br>";
     message +=
       '<a href="https://bamboomusic.asia/" target="_blank" rel="noreferrer noopener">https://bamboomusic.asia/</a>';
-  } else if (num == 6) {
+  } else if (num == 6
+  ) {
     message += "CONTACT (Google Forms)<br>";
     message += "ご質問やご相談などありましたら、こちらのフォームよりお気軽にお問い合わせください。<br>";
     message += "If you have any questions or inquiries, please feel free to contact me using the form below.<br>";
     message +=
-      '<a href="https://forms.gle/taLY8r8fQNACpEuw9" target="_blank" rel="noreferrer noopener">https://forms.gle/taLY8r8fQNACpEuw9</a>';
+      '<a href="https://forms.gle/vw2H7nSVmZHRV9369" target="_blank" rel="noreferrer noopener">https://forms.gle/vw2H7nSVmZHRV9369</a>';
   }
 
   if (num != 1) {
