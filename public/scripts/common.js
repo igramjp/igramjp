@@ -236,7 +236,7 @@ function log(num) {
     message +=
       '<a href="//github.com/igramjp" target="_blank" rel="noreferrer noopener">https://github.com/igramjp</a>';
   } else if (num == 2) {
-    message += "©︎ " + "igram" + " " + new Date().getFullYear() + " " + "All rights reserved.<br>";
+    message += "©︎ " + new Date().getFullYear() + " " + "igram" + " " + "All rights reserved.<br>";
   } else if (num == 3) {
     message += "IGRAM LAB (YouTube)<br>";
     message += "音響プログラミングの実験や演奏を映像で公開しています。耳で聴き、目で見る「音の現象」を共有する実験室です。<br>";
