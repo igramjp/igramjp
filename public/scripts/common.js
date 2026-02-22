@@ -260,34 +260,22 @@ function log(num) {
     message +=
       '<a href="https://www.youtube.com/@igramlab" target="_blank" rel="noreferrer noopener">https://www.youtube.com/@igramlab<a/>';
   } else if (num == 4) {
-    message += "IGRAM RESEARCH（note）<br>";
-    message += "音響表現の背景にある技術や思想を記録・考察しています。SuperColliderやMaxのコードに宿る思考を言葉にします。<br>";
-    message += "Exploring the techniques and ideas behind sonic expression. Turning the thoughts embedded in SuperCollider and Max code into words.<br>";
-    message +=
-      '<a href="https://note.com/igram/membership" target="_blank" rel="noreferrer noopener">https://note.com/igram/membership<a/>';
-  } else if (num == 5) {
-    message += "IGRAM NETWORK（Discord）<br>";
-    message += "音響プログラミングに関心のある人々が集うコミュニティです。コードや音、対話を通じてゆるやかにつながります。<br>";
-    message += "A community for those interested in sound programming. Connecting through code, sound, and conversation.<br>";
-    message +=
-      '<a href="https://discord.gg/Vddn4Z3Jrp" target="_blank" rel="noreferrer noopener">https://discord.gg/Vddn4Z3Jrp<a/>';
-  } else if (num == 6) {
     message += "リアルタイム純正律周波数 ― Web MIDIによる実験アプリ<br>";
     message += "Real-Time Just Intonation Frequencies – A Web MIDI Experiment<br>";
     message +=
       '<a href="/app/just-intonation-midi/" target="_blank" rel="noreferrer noopener">/app/just-intonation-midi/</a>';
-  } else if (num == 7) {
+  } else if (num == 5) {
     message += "竹音（ちくおん／bamboo music）<br>";
     message += "日本を拠点とするインディペンデントな音楽レーベル兼アート・インプリントです。<br>";
     message += " bamboo music is an independent record label and art imprint based in Japan.<br>";
     message +=
       '<a href="https://bamboomusic.asia/" target="_blank" rel="noreferrer noopener">https://bamboomusic.asia/</a>';
-  } else if (num == 8) {
+  } else if (num == 6) {
     message += "CONTACT (Google Forms)<br>";
     message += "ご質問やご相談などありましたら、こちらのフォームよりお気軽にお問い合わせください。<br>";
     message += "If you have any questions or inquiries, please feel free to contact me using the form below.<br>";
     message +=
-      '<a href="https://forms.gle/9kQKMp8ajEr3vf716" target="_blank" rel="noreferrer noopener">https://forms.gle/9kQKMp8ajEr3vf716</a>';
+      '<a href="https://forms.gle/taLY8r8fQNACpEuw9" target="_blank" rel="noreferrer noopener">https://forms.gle/taLY8r8fQNACpEuw9</a>';
   }
 
   if (num != 1) {
