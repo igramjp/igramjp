@@ -253,7 +253,7 @@ function log(num) {
     message += "リアルタイム純正律周波数 ― Web MIDIによる実験アプリ<br>";
     message += "Real-Time Just Intonation Frequencies – A Web MIDI Experiment<br>";
     message +=
-      '<a href="/app/just-intonation-midi/" target="_blank" rel="noreferrer noopener">/app/just-intonation-midi/</a>';
+      '<a href="https://igram.jp/app/just-intonation-midi/" target="_blank" rel="noreferrer noopener">https://igram.jp/app/just-intonation-midi/</a>';
   } else if (num == 6) {
     message += "竹音（ちくおん／bamboo music）<br>";
     message += "日本を拠点とするインディペンデントな音楽レーベル兼アート・インプリントです。<br>";
