@@ -155,6 +155,8 @@ li {
   width: max-content;
   max-width: 276px;
   height: auto;
+  text-align: justify;
+  word-break: break-all;
 }
 
 .object.main.new {
