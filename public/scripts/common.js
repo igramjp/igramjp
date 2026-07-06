@@ -315,9 +315,31 @@
     if (hintEl) hintEl.style.display = show ? "" : "none";
   }
 
+  /* X's in-app browser can inherit a muted audio session from the app
+     (silent switch, or a muted timeline video played first): the context
+     may even report "running" while Web Audio stays silent, and resume()
+     can't fix it. Playing a real <audio> element inside the gesture flips
+     the session to playback and unmutes Web Audio (the unmute.js trick). */
+  const SILENT_WAV =
+    "data:audio/wav;base64,UklGRkQDAABXQVZFZm10IBAAAAABAAEAQB8AAIA+AAACABAAZGF0YSADAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==";
+  let unmuteEl = null;
+  function pokeMediaSession() {
+    try {
+      if (!unmuteEl) {
+        unmuteEl = document.createElement("audio");
+        unmuteEl.setAttribute("playsinline", "");
+        unmuteEl.preload = "auto";
+        unmuteEl.src = SILENT_WAV;
+      }
+      const p = unmuteEl.play();
+      if (p && p.catch) p.catch(() => {});
+    } catch (e) {}
+  }
+
   /* strict WebViews (e.g. X's in-app browser) only unlock audio inside a
      touchend/click handler — pointer events don't count as a gesture there */
   function unlockAudio() {
+    pokeMediaSession();
     const a = ensureAudio();
     if (!a) return;
     /* classic unlock: a silent buffer started synchronously inside the
