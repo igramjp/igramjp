@@ -193,52 +193,85 @@
     newsEl.style.display = name === "manabu" ? "" : "none";
   }
 
-  /* audio: a grabbed box is an oscillator — y is pitch, x is pan */
+  /* audio: a grabbed box is an oscillator — y is pitch, x is pan.
+     The top of the screen reaches 5 kHz, compensated to stay quiet. */
   let audio = null;
+  function click() {
+    /* a raster-noton tick on grab and release */
+    if (!audio) return;
+    const actx = audio.ctx;
+    const len = Math.max(2, Math.floor(actx.sampleRate * 0.002));
+    const buf = actx.createBuffer(1, len, actx.sampleRate);
+    const data = buf.getChannelData(0);
+    for (let i = 0; i < len; i++) {
+      data[i] = (Math.random() * 2 - 1) * (1 - i / len);
+    }
+    const src = actx.createBufferSource();
+    const g = actx.createGain();
+    g.gain.value = 0.12;
+    src.buffer = buf;
+    src.connect(g);
+    g.connect(actx.destination);
+    src.start();
+  }
   function startVoice(node) {
     try {
       const AC = window.AudioContext || window.webkitAudioContext;
       if (!AC) return;
       stopVoice();
-      if (!audio) audio = { ctx: new AC(), osc: null, gain: null, pan: null };
+      if (!audio) audio = { ctx: new AC(), osc: null, lvl: null, env: null, pan: null };
       audio.ctx.resume();
       const t = audio.ctx.currentTime;
       const osc = audio.ctx.createOscillator();
-      const gain = audio.ctx.createGain();
+      const lvl = audio.ctx.createGain(); // loudness compensation
+      const env = audio.ctx.createGain(); // attack / release
       const pan = audio.ctx.createStereoPanner ? audio.ctx.createStereoPanner() : null;
       osc.type = "sine";
-      gain.gain.setValueAtTime(0, t);
-      gain.gain.linearRampToValueAtTime(0.04, t + 0.02);
-      osc.connect(gain);
-      (pan ? (gain.connect(pan), pan) : gain).connect(audio.ctx.destination);
+      env.gain.setValueAtTime(0, t);
+      env.gain.linearRampToValueAtTime(1, t + 0.02);
+      osc.connect(lvl);
+      lvl.connect(env);
+      (pan ? (env.connect(pan), pan) : env).connect(audio.ctx.destination);
       osc.start();
       audio.osc = osc;
-      audio.gain = gain;
+      audio.lvl = lvl;
+      audio.env = env;
       audio.pan = pan;
-      tuneVoice(node);
+      tuneVoice(node, true);
+      click();
     } catch (e) {}
   }
-  function tuneVoice(node) {
+  function tuneVoice(node, snap) {
     if (!audio || !audio.osc) return;
     const p = port(node);
     const t = audio.ctx.currentTime;
-    const freq = 80 * Math.pow(1000 / 80, 1 - p.y / window.innerHeight);
-    audio.osc.frequency.setTargetAtTime(freq, t, 0.03);
-    if (audio.pan) {
-      audio.pan.pan.setTargetAtTime((p.x / window.innerWidth) * 2 - 1, t, 0.03);
+    const freq = 80 * Math.pow(5000 / 80, 1 - p.y / window.innerHeight);
+    /* high sines pierce (equal-loudness) — thin them out as they rise */
+    const amp = 0.04 * Math.min(1, Math.pow(600 / freq, 0.6));
+    const panPos = (p.x / window.innerWidth) * 2 - 1;
+    if (snap) {
+      audio.osc.frequency.setValueAtTime(freq, t);
+      audio.lvl.gain.setValueAtTime(amp, t);
+      if (audio.pan) audio.pan.pan.setValueAtTime(panPos, t);
+    } else {
+      audio.osc.frequency.setTargetAtTime(freq, t, 0.03);
+      audio.lvl.gain.setTargetAtTime(amp, t, 0.03);
+      if (audio.pan) audio.pan.pan.setTargetAtTime(panPos, t, 0.03);
     }
   }
   function stopVoice() {
     if (!audio || !audio.osc) return;
-    const { osc, gain } = audio;
+    const { osc, env } = audio;
     const t = audio.ctx.currentTime;
-    gain.gain.cancelScheduledValues(t);
-    gain.gain.setValueAtTime(gain.gain.value, t);
-    gain.gain.linearRampToValueAtTime(0, t + 0.08);
+    env.gain.cancelScheduledValues(t);
+    env.gain.setValueAtTime(env.gain.value, t);
+    env.gain.linearRampToValueAtTime(0, t + 0.08);
     osc.stop(t + 0.1);
     audio.osc = null;
-    audio.gain = null;
+    audio.lvl = null;
+    audio.env = null;
     audio.pan = null;
+    click();
   }
 
   /* nodes */
