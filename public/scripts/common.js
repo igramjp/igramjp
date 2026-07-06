@@ -250,10 +250,11 @@ function log(num) {
     message +=
       '<a href="https://live.igram.jp/" target="_blank" rel="noreferrer noopener">https://live.igram.jp/</a>';
   } else if (num == 5) {
-    message += "リアルタイム純正律周波数 ― Web MIDIによる実験アプリ<br>";
-    message += "Real-Time Just Intonation Frequencies – A Web MIDI Experiment<br>";
+    message += "oshiki（黄鐘）<br>";
+    message += "雅楽の十二律(三分損益法・黄鐘 A=430Hz)と純正律・平均律の周波数表を、Web MIDI入力にもリアルタイムで反応する形で表示する実験アプリ。<br>";
+    message += "oshiki (黄鐘) – Note-to-frequency tables in traditional Japanese and classical tunings (Sanbun-Soneki, just intonation, equal temperament), live via Web MIDI.<br>";
     message +=
-      '<a href="https://igram.jp/app/just-intonation-midi/" target="_blank" rel="noreferrer noopener">https://igram.jp/app/just-intonation-midi/</a>';
+      '<a href="https://igram.jp/app/oshiki/" target="_blank" rel="noreferrer noopener">https://igram.jp/app/oshiki/</a>';
   } else if (num == 6) {
     message += "竹音（ちくおん／bamboo music）<br>";
     message += "日本を拠点とするインディペンデントな音楽レーベル兼アート・インプリントです。<br>";

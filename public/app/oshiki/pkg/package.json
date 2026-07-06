@@ -1,0 +1,15 @@
+{
+  "name": "oshiki",
+  "type": "module",
+  "version": "0.1.0",
+  "files": [
+    "oshiki_bg.wasm",
+    "oshiki.js",
+    "oshiki.d.ts"
+  ],
+  "main": "oshiki.js",
+  "types": "oshiki.d.ts",
+  "sideEffects": [
+    "./snippets/*"
+  ]
+}

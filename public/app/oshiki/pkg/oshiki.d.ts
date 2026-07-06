@@ -1,19 +1,33 @@
 /* tslint:disable */
 /* eslint-disable */
 /**
-* @param {number} note
-* @param {number} reference_frequency
+* Frequency in Hz for a MIDI note (0-127).
+* `temperament` is "sanbun", "just", or "equal".
+* @param {number} midi_note
 * @param {string} root_key
+* @param {number} reference_frequency
+* @param {string} temperament
+* @param {boolean} root_anchor
+* @returns {number}
 */
-export function send_note_to_rust(note: number, reference_frequency: number, root_key: string): void;
+export function note_frequency(midi_note: number, root_key: string, reference_frequency: number, temperament: string, root_anchor: boolean): number;
+/**
+* Note name with octave for a MIDI note, e.g. 69 -> "A4".
+* @param {number} midi_note
+* @returns {string}
+*/
+export function note_label(midi_note: number): string;
 
 export type InitInput = RequestInfo | URL | Response | BufferSource | WebAssembly.Module;
 
 export interface InitOutput {
   readonly memory: WebAssembly.Memory;
-  readonly send_note_to_rust: (a: number, b: number, c: number, d: number) => void;
+  readonly note_frequency: (a: number, b: number, c: number, d: number, e: number, f: number, g: number, h: number) => void;
+  readonly note_label: (a: number, b: number) => void;
+  readonly __wbindgen_add_to_stack_pointer: (a: number) => number;
   readonly __wbindgen_malloc: (a: number, b: number) => number;
   readonly __wbindgen_realloc: (a: number, b: number, c: number, d: number) => number;
+  readonly __wbindgen_free: (a: number, b: number, c: number) => void;
 }
 
 export type SyncInitInput = BufferSource | WebAssembly.Module;

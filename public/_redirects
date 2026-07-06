@@ -1,9 +1,12 @@
+# 旧アプリ名 (just-intonation-midi) からのリダイレクト
+/app/just-intonation-midi/* /app/oshiki/ 301
+/app/just-intonation-midi   /app/oshiki/ 301
+
 # 静的ファイルを優先
-/app/just-intonation-midi/pkg/*    /app/just-intonation-midi/pkg/:splat   200
-/app/just-intonation-midi/js/*     /app/just-intonation-midi/js/:splat    200
-/app/just-intonation-midi/static/* /app/just-intonation-midi/static/:splat 200
+/app/oshiki/pkg/*    /app/oshiki/pkg/:splat   200
+/app/oshiki/static/* /app/oshiki/static/:splat 200
 
 # SPAルーティング
-/app/just-intonation-midi/    /app/just-intonation-midi/index.html   200
-/app/just-intonation-midi     /app/just-intonation-midi/index.html   200
-/*    /index.html   200    !/app/just-intonation-midi/**
+/app/oshiki/    /app/oshiki/index.html   200
+/app/oshiki     /app/oshiki/index.html   200
+/*    /index.html   200    !/app/oshiki/**

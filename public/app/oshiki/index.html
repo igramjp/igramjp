@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>oshiki (黄鐘) – Japanese Ritsu &amp; Just Intonation Frequencies via Web MIDI | igram.jp</title>
+  <link href="./static/output.css" rel="stylesheet" />
+  <style>
+    #table { border-collapse: collapse; }
+    #table th, #table td { border: 1px solid #d1d5db; padding: 2px 10px; text-align: right; font-variant-numeric: tabular-nums; }
+    #table th { font-weight: 500; color: #374151; }
+    #table td:first-child { text-align: left; }
+  </style>
+</head>
+
+<body class="bg-white p-4">
+  <h1 class="font-mono text-base font-medium text-gray-700">oshiki (黄鐘)</h1>
+  <p class="mb-2 w-full font-mono text-sm text-gray-700">
+    Note-to-frequency tables in traditional Japanese and classical tunings.
+    Defaults: Sanbun-Soneki (三分損益法) from Ichikotsu (D), Ōshiki A4 = 430 Hz —
+    <a href="https://github.com/igramjp/oshiki" target="_blank" rel="noreferrer noopener" class="font-medium">github.com/igramjp/oshiki</a>
+  </p>
+  <div>
+    <label for="temperament" class="w-full font-mono text-sm font-medium text-gray-700">Temperament:</label>
+    <select id="temperament" name="temperament"
+      class="mb-2 mt-1 block w-min rounded-md border border-gray-300 bg-white px-1 py-1 font-mono shadow-sm focus:outline-none sm:text-sm">
+      <option value="sanbun" selected>Sanbun-Soneki (三分損益法)</option>
+      <option value="just">Just Intonation (5-limit)</option>
+      <option value="equal">Equal Temperament (12-TET)</option>
+    </select>
+  </div>
+  <div>
+    <label for="rootKey" class="w-full font-mono text-sm font-medium text-gray-700">Root Key:</label>
+    <select id="rootKey" name="rootKey"
+      class="mb-2 mt-1 block w-min rounded-md border border-gray-300 bg-white px-1 py-1 font-mono shadow-sm focus:outline-none sm:text-sm">
+      <option value="C">C</option>
+      <option value="C#">C#</option>
+      <option value="D" selected>D (Ichikotsu 壱越)</option>
+      <option value="D#">D#</option>
+      <option value="E">E</option>
+      <option value="F">F</option>
+      <option value="F#">F#</option>
+      <option value="G">G</option>
+      <option value="G#">G#</option>
+      <option value="A">A</option>
+      <option value="A#">A#</option>
+      <option value="B">B</option>
+    </select>
+  </div>
+  <div>
+    <label for="frequency" class="w-full font-mono text-sm font-medium text-gray-700">Reference Frequency A4 (Hz):</label>
+    <input type="number" id="frequency" name="frequency" value="430.0" step="0.1"
+      class="mb-2 mt-1 block w-min rounded-md border border-gray-300 px-1 py-1 font-mono shadow-sm focus:outline-none sm:text-sm" />
+  </div>
+  <div class="mb-2 mt-1">
+    <label for="rootAnchor" class="font-mono text-sm font-medium text-gray-700">
+      <input type="checkbox" id="rootAnchor" name="rootAnchor" />
+      Anchor root to its Equal Temperament pitch (synth microtuning preset mode)
+    </label>
+  </div>
+  <div id="output" class="mt-4 inline-flex bg-black px-3 py-1 font-mono text-base font-medium text-white">
+    Waiting for MIDI input...
+  </div>
+  <div class="mt-4">
+    <table id="table" class="font-mono sm:text-sm">
+      <thead>
+        <tr><th>Note</th><th>Frequency (Hz)</th></tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+  <script type="module">
+    import init, { note_frequency, note_label } from "./pkg/oshiki.js";
+
+    const temperamentEl = document.getElementById("temperament");
+    const rootKeyEl = document.getElementById("rootKey");
+    const frequencyEl = document.getElementById("frequency");
+    const rootAnchorEl = document.getElementById("rootAnchor");
+    const outputEl = document.getElementById("output");
+    const tbodyEl = document.querySelector("#table tbody");
+
+    function settings() {
+      return {
+        rootKey: rootKeyEl.value,
+        reference: parseFloat(frequencyEl.value) || 430.0,
+        temperament: temperamentEl.value,
+        rootAnchor: rootAnchorEl.checked,
+      };
+    }
+
+    function frequencyOf(note) {
+      const s = settings();
+      return note_frequency(note, s.rootKey, s.reference, s.temperament, s.rootAnchor);
+    }
+
+    // The root key and anchor are meaningless in Equal Temperament.
+    function syncControls() {
+      const equal = temperamentEl.value === "equal";
+      rootKeyEl.disabled = equal;
+      rootAnchorEl.disabled = equal;
+    }
+
+    function renderTable() {
+      syncControls();
+      let rows = "";
+      for (let note = 60; note <= 72; note++) {
+        rows += `<tr><td>${note_label(note)}</td><td>${frequencyOf(note).toFixed(3)}</td></tr>`;
+      }
+      tbodyEl.innerHTML = rows;
+    }
+
+    function onMIDIMessage(message) {
+      const [status, note, velocity] = message.data;
+      if ((status & 0xf0) === 0x90 && velocity > 0) {
+        outputEl.innerText = `${note} ${note_label(note)} ${frequencyOf(note).toFixed(3)} Hz`;
+      }
+    }
+
+    async function run() {
+      await init();
+      renderTable();
+      for (const el of [temperamentEl, rootKeyEl, frequencyEl, rootAnchorEl]) {
+        el.addEventListener("input", renderTable);
+      }
+      if (navigator.requestMIDIAccess) {
+        navigator.requestMIDIAccess().then((access) => {
+          for (const input of access.inputs.values()) {
+            input.onmidimessage = onMIDIMessage;
+          }
+        });
+      } else {
+        outputEl.innerText = "Web MIDI is not supported in this browser.";
+      }
+    }
+
+    run();
+  </script>
+</body>
+
+</html>
