@@ -114,7 +114,6 @@
         node.y = node.ty;
       }
       place(node);
-      if (node.grab) tuneVoice(node);
     }
     draw();
     if (moving) raf = requestAnimationFrame(frame);
@@ -193,85 +192,77 @@
     newsEl.style.display = name === "manabu" ? "" : "none";
   }
 
-  /* audio: a grabbed box is an oscillator — y is pitch, x is pan.
-     The top of the screen reaches 5 kHz, compensated to stay quiet. */
+  /* audio: each grab blooms a soft sine that slowly decays and echoes away.
+     Pitch is quantized to a ritsu pentatonic rooted in the oshiki gamut
+     (Oshiki A = 430 Hz), so overlapping notes always agree; dragging up
+     and down plays the degrees the box crosses. */
+  const SCALE = [0, 2, 5, 7, 9]; // ritsu: D E G A B
+  const OCTAVES = 3;
+  const STEPS = SCALE.length * OCTAVES + 1;
+  const NOTE_ROOT = (430 * Math.pow(2, -7 / 12)) / 2; // D3 below Oshiki A
+  const NOTE_SECONDS = 6;
   let audio = null;
-  function click() {
-    /* a raster-noton tick on grab and release */
-    if (!audio) return;
-    const actx = audio.ctx;
-    const len = Math.max(2, Math.floor(actx.sampleRate * 0.002));
-    const buf = actx.createBuffer(1, len, actx.sampleRate);
-    const data = buf.getChannelData(0);
-    for (let i = 0; i < len; i++) {
-      data[i] = (Math.random() * 2 - 1) * (1 - i / len);
-    }
-    const src = actx.createBufferSource();
-    const g = actx.createGain();
-    g.gain.value = 0.12;
-    src.buffer = buf;
-    src.connect(g);
-    g.connect(actx.destination);
-    src.start();
-  }
-  function startVoice(node) {
-    try {
-      const AC = window.AudioContext || window.webkitAudioContext;
-      if (!AC) return;
-      stopVoice();
-      if (!audio) audio = { ctx: new AC(), osc: null, lvl: null, env: null, pan: null };
+  let activeNotes = 0;
+  let lastNoteAt = 0;
+  function ensureAudio() {
+    if (audio) {
       audio.ctx.resume();
-      const t = audio.ctx.currentTime;
-      const osc = audio.ctx.createOscillator();
-      const lvl = audio.ctx.createGain(); // loudness compensation
-      const env = audio.ctx.createGain(); // attack / release
-      const pan = audio.ctx.createStereoPanner ? audio.ctx.createStereoPanner() : null;
-      osc.type = "sine";
-      env.gain.setValueAtTime(0, t);
-      env.gain.linearRampToValueAtTime(1, t + 0.02);
-      osc.connect(lvl);
-      lvl.connect(env);
-      (pan ? (env.connect(pan), pan) : env).connect(audio.ctx.destination);
-      osc.start();
-      audio.osc = osc;
-      audio.lvl = lvl;
-      audio.env = env;
-      audio.pan = pan;
-      tuneVoice(node, true);
-      click();
-    } catch (e) {}
-  }
-  function tuneVoice(node, snap) {
-    if (!audio || !audio.osc) return;
-    const p = port(node);
-    const t = audio.ctx.currentTime;
-    const freq = 80 * Math.pow(5000 / 80, 1 - p.y / window.innerHeight);
-    /* high sines pierce (equal-loudness) — thin them out as they rise */
-    const amp = 0.04 * Math.min(1, Math.pow(600 / freq, 0.6));
-    const panPos = (p.x / window.innerWidth) * 2 - 1;
-    if (snap) {
-      audio.osc.frequency.setValueAtTime(freq, t);
-      audio.lvl.gain.setValueAtTime(amp, t);
-      if (audio.pan) audio.pan.pan.setValueAtTime(panPos, t);
-    } else {
-      audio.osc.frequency.setTargetAtTime(freq, t, 0.03);
-      audio.lvl.gain.setTargetAtTime(amp, t, 0.03);
-      if (audio.pan) audio.pan.pan.setTargetAtTime(panPos, t, 0.03);
+      return audio;
     }
+    const AC = window.AudioContext || window.webkitAudioContext;
+    if (!AC) return null;
+    const actx = new AC();
+    const master = actx.createGain();
+    master.gain.value = 0.9;
+    master.connect(actx.destination);
+    const delay = actx.createDelay(2);
+    delay.delayTime.value = 0.5;
+    const feedback = actx.createGain();
+    feedback.gain.value = 0.35;
+    const wet = actx.createGain();
+    wet.gain.value = 0.3;
+    master.connect(delay);
+    delay.connect(feedback);
+    feedback.connect(delay);
+    delay.connect(wet);
+    wet.connect(actx.destination);
+    audio = { ctx: actx, master };
+    return audio;
   }
-  function stopVoice() {
-    if (!audio || !audio.osc) return;
-    const { osc, env } = audio;
-    const t = audio.ctx.currentTime;
-    env.gain.cancelScheduledValues(t);
-    env.gain.setValueAtTime(env.gain.value, t);
-    env.gain.linearRampToValueAtTime(0, t + 0.08);
-    osc.stop(t + 0.1);
-    audio.osc = null;
-    audio.lvl = null;
-    audio.env = null;
-    audio.pan = null;
-    click();
+  function degreeAt(node) {
+    const py = node.type === "main" ? node.ty : node.ty + node.h;
+    const ratio = clamp(1 - py / window.innerHeight, 0, 1);
+    return Math.round(ratio * (STEPS - 1));
+  }
+  function playNote(node) {
+    try {
+      const a = ensureAudio();
+      if (!a || activeNotes >= 16) return;
+      const deg = degreeAt(node);
+      const octave = Math.floor(deg / SCALE.length);
+      const freq = NOTE_ROOT * Math.pow(2, (octave * 12 + SCALE[deg % SCALE.length]) / 12);
+      const amp = 0.05 * Math.pow(0.8, octave); // keep high notes gentle
+      const t = a.ctx.currentTime;
+      const osc = a.ctx.createOscillator();
+      const gain = a.ctx.createGain();
+      const pan = a.ctx.createStereoPanner ? a.ctx.createStereoPanner() : null;
+      osc.type = "sine";
+      osc.frequency.value = freq;
+      gain.gain.setValueAtTime(0, t);
+      gain.gain.linearRampToValueAtTime(amp, t + 0.12);
+      gain.gain.exponentialRampToValueAtTime(0.0005, t + NOTE_SECONDS);
+      if (pan) {
+        pan.pan.value = clamp(((node.tx + PORT_X) / window.innerWidth) * 2 - 1, -0.8, 0.8);
+      }
+      osc.connect(gain);
+      (pan ? (gain.connect(pan), pan) : gain).connect(a.master);
+      activeNotes++;
+      osc.onended = () => {
+        activeNotes = Math.max(0, activeNotes - 1);
+      };
+      osc.start(t);
+      osc.stop(t + NOTE_SECONDS + 0.1);
+    } catch (e) {}
   }
 
   /* nodes */
@@ -302,20 +293,27 @@
       el.classList.add("drag");
       el.style.zIndex = ++zTop;
       showInfo(node.name);
-      startVoice(node);
+      node.grab.deg = degreeAt(node);
+      playNote(node);
       kick();
     });
     el.addEventListener("pointermove", (e) => {
       if (!node.grab || e.pointerId !== node.grab.id) return;
       node.tx = clamp(e.pageX - node.grab.dx, MARGIN, window.innerWidth - node.w - MARGIN);
       node.ty = clamp(e.pageY - node.grab.dy, MARGIN, window.innerHeight - node.h - MARGIN);
+      const deg = degreeAt(node);
+      const now = performance.now();
+      if (deg !== node.grab.deg && now - lastNoteAt > 80) {
+        node.grab.deg = deg;
+        lastNoteAt = now;
+        playNote(node);
+      }
       kick();
     });
     const release = (e) => {
       if (!node.grab || e.pointerId !== node.grab.id) return;
       node.grab = null;
       el.classList.remove("drag");
-      stopVoice();
       kick();
     };
     el.addEventListener("pointerup", release);
@@ -375,11 +373,12 @@
   let cpu = 1.2;
   function updateStatus() {
     cpu = Math.min(4.9, Math.max(0.3, cpu + (Math.random() - 0.5) * 0.4));
-    const peak = cpu + Math.random() * 1.4;
-    const on = audio && audio.osc;
+    const load = cpu + activeNotes * 0.5;
+    const peak = load + Math.random() * 1.4;
     statusEl.textContent =
-      cpu.toFixed(1) + "%  " + peak.toFixed(1) + "%  " +
-      (on ? "3u  1s  " : "0u  0s  ") + "1g  " + defCount + "d";
+      load.toFixed(1) + "%  " + peak.toFixed(1) + "%  " +
+      activeNotes * 3 + "u  " + activeNotes + "s  " +
+      "1g  " + defCount + "d";
   }
   updateStatus();
   setInterval(updateStatus, 500);
