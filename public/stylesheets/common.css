@@ -84,19 +84,31 @@ li {
 
 /* index */
 
+#canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
 .object {
-  cursor: move;
+  cursor: grab;
   padding: 4px;
   position: absolute;
   top: 0;
   left: 0;
   max-width: 304px;
-  margin: 0 8px;
   word-break: break-all;
+  touch-action: none;
+  will-change: transform;
   user-select: none;
   -moz-user-select: none;
   -webkit-user-select: none;
   -ms-user-select: none;
+}
+
+.object.drag {
+  cursor: grabbing;
+  box-shadow: 3px 3px 0 rgba(17, 17, 17, 0.08);
 }
 
 .main {
@@ -133,16 +145,6 @@ li {
   height: 3px;
 }
 
-.line {
-  border-top: solid 1px var(--color-black);
-  -moz-transform-origin: 0% 0%;
-  -webkit-transform-origin: 0% 0%;
-  float: left;
-  position: absolute;
-  transform-origin: 0% 0%;
-  z-index: -1;
-}
-
 #log {
   color: var(--color-black);
   font-family: "Gothic Medium BBB", sans-serif;
@@ -162,6 +164,25 @@ li {
 .object.main.new {
   animation: blink 2s step-end infinite;
   cursor: pointer;
+}
+
+/* post window */
+
+#log .post {
+  font-family: "Inconsolata", monospace;
+}
+
+#log .caret {
+  animation: blink 1s step-end infinite;
+  display: inline-block;
+  width: 0.6em;
+  height: 1.1em;
+  margin-left: 2px;
+  vertical-align: text-bottom;
+}
+
+#log .comment {
+  color: var(--color-darkgray);
 }
 
 #news {
