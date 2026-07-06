@@ -23,6 +23,7 @@ Short videos of works in progress, each with the complete code to run and modify
 
 ## Links
 
+- Web: https://igram.jp
 - note: https://note.com/igram
 - X: https://x.com/igramjp
 
