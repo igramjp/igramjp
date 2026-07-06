@@ -351,6 +351,12 @@
         src.start(0);
       } catch (e) {}
     }
+    /* resume()'s promise can hang forever when the gesture is rejected,
+       so the hint must not wait for it — re-check on a timer instead */
+    setTimeout(() => {
+      dbg("post-check: ctx " + a.ctx.state);
+      if (a.ctx.state !== "running" && pendingNode) showHint(true);
+    }, 350);
     Promise.resolve(a.ctx.resume()).then(() => {
       dbg("resume resolved: ctx " + a.ctx.state);
       if (a.ctx.state !== "running") {
