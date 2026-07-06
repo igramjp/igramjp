@@ -204,6 +204,7 @@
   let audio = null;
   let activeNotes = 0;
   let lastNoteAt = 0;
+  let pendingNode = null; // note that fell on a suspended context; replay on unlock
   function ensureAudio() {
     if (audio) {
       audio.ctx.resume();
@@ -258,6 +259,10 @@
     try {
       const a = ensureAudio();
       if (!a || activeNotes >= 16) return;
+      if (a.ctx.state !== "running") {
+        pendingNode = node;
+        return;
+      }
       const deg = degreeAt(node);
       const octave = Math.floor(deg / SCALE.length);
       const freq = NOTE_ROOT * Math.pow(2, (octave * 12 + SCALE[deg % SCALE.length]) / 12);
@@ -331,8 +336,18 @@
       kick();
     });
     const release = (e) => {
-      /* WebKit may only unlock audio on pointerup/touchend, not pointerdown */
-      ensureAudio();
+      /* WebKit may only unlock audio on pointerup/touchend, not pointerdown;
+         once unlocked, replay the note the tap meant to play */
+      const a = ensureAudio();
+      if (a && pendingNode) {
+        Promise.resolve(a.ctx.resume()).then(() => {
+          if (a.ctx.state === "running" && pendingNode) {
+            const n = pendingNode;
+            pendingNode = null;
+            playNote(n);
+          }
+        });
+      }
       if (!node.grab || e.pointerId !== node.grab.id) return;
       node.grab = null;
       el.classList.remove("drag");
