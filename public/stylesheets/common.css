@@ -210,6 +210,23 @@ li {
   height: auto;
 }
 
+#status {
+  color: var(--color-darkgray);
+  font-family: "Inconsolata", monospace;
+  font-size: 10.6px;
+  font-size: 1.06rem;
+  letter-spacing: 0.04em;
+  line-height: 1;
+  position: fixed;
+  bottom: 1em;
+  left: 1em;
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  white-space: pre;
+}
+
 tt {
   font-size: 10.6px;
   font-size: 1.06rem;

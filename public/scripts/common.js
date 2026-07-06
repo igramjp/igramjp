@@ -114,6 +114,7 @@
         node.y = node.ty;
       }
       place(node);
+      if (node.grab) tuneVoice(node);
     }
     draw();
     if (moving) raf = requestAnimationFrame(frame);
@@ -128,7 +129,10 @@
     const GAP = 24;
     const list = [...nodes.values()];
     /* dx/dy: which way to escape — away from the corner the zone is anchored to */
-    const zones = [{ x: 0, y: 0, w: 390, h: 240, dx: 1, dy: 1 }]; // #log
+    const zones = [
+      { x: 0, y: 0, w: 390, h: 240, dx: 1, dy: 1 }, // #log
+      { x: 0, y: window.innerHeight - 44, w: 240, h: 44, dx: 1, dy: -1 }, // #status
+    ];
     if (window.innerWidth >= 720 && window.innerHeight >= 600) {
       zones.push({
         x: window.innerWidth - 320,
@@ -189,6 +193,54 @@
     newsEl.style.display = name === "manabu" ? "" : "none";
   }
 
+  /* audio: a grabbed box is an oscillator — y is pitch, x is pan */
+  let audio = null;
+  function startVoice(node) {
+    try {
+      const AC = window.AudioContext || window.webkitAudioContext;
+      if (!AC) return;
+      stopVoice();
+      if (!audio) audio = { ctx: new AC(), osc: null, gain: null, pan: null };
+      audio.ctx.resume();
+      const t = audio.ctx.currentTime;
+      const osc = audio.ctx.createOscillator();
+      const gain = audio.ctx.createGain();
+      const pan = audio.ctx.createStereoPanner ? audio.ctx.createStereoPanner() : null;
+      osc.type = "sine";
+      gain.gain.setValueAtTime(0, t);
+      gain.gain.linearRampToValueAtTime(0.04, t + 0.02);
+      osc.connect(gain);
+      (pan ? (gain.connect(pan), pan) : gain).connect(audio.ctx.destination);
+      osc.start();
+      audio.osc = osc;
+      audio.gain = gain;
+      audio.pan = pan;
+      tuneVoice(node);
+    } catch (e) {}
+  }
+  function tuneVoice(node) {
+    if (!audio || !audio.osc) return;
+    const p = port(node);
+    const t = audio.ctx.currentTime;
+    const freq = 80 * Math.pow(1000 / 80, 1 - p.y / window.innerHeight);
+    audio.osc.frequency.setTargetAtTime(freq, t, 0.03);
+    if (audio.pan) {
+      audio.pan.pan.setTargetAtTime((p.x / window.innerWidth) * 2 - 1, t, 0.03);
+    }
+  }
+  function stopVoice() {
+    if (!audio || !audio.osc) return;
+    const { osc, gain } = audio;
+    const t = audio.ctx.currentTime;
+    gain.gain.cancelScheduledValues(t);
+    gain.gain.setValueAtTime(gain.gain.value, t);
+    gain.gain.linearRampToValueAtTime(0, t + 0.08);
+    osc.stop(t + 0.1);
+    audio.osc = null;
+    audio.gain = null;
+    audio.pan = null;
+  }
+
   /* nodes */
   for (const el of document.querySelectorAll(".object")) {
     const node = {
@@ -217,6 +269,7 @@
       el.classList.add("drag");
       el.style.zIndex = ++zTop;
       showInfo(node.name);
+      startVoice(node);
       kick();
     });
     el.addEventListener("pointermove", (e) => {
@@ -229,6 +282,7 @@
       if (!node.grab || e.pointerId !== node.grab.id) return;
       node.grab = null;
       el.classList.remove("drag");
+      stopVoice();
       kick();
     };
     el.addEventListener("pointerup", release);
@@ -281,6 +335,21 @@
       setTimeout(() => bootLog(i + 1), 140 + Math.random() * 240);
     }
   })(0);
+
+  /* server status: avg CPU, peak CPU, UGens, Synths, Groups, SynthDefs */
+  const statusEl = document.getElementById("status");
+  const defCount = Object.keys(INFO).length;
+  let cpu = 1.2;
+  function updateStatus() {
+    cpu = Math.min(4.9, Math.max(0.3, cpu + (Math.random() - 0.5) * 0.4));
+    const peak = cpu + Math.random() * 1.4;
+    const on = audio && audio.osc;
+    statusEl.textContent =
+      cpu.toFixed(1) + "%  " + peak.toFixed(1) + "%  " +
+      (on ? "3u  1s  " : "0u  0s  ") + "1g  " + defCount + "d";
+  }
+  updateStatus();
+  setInterval(updateStatus, 500);
 
   /* news */
   fetch("/.netlify/functions/slack-api")
