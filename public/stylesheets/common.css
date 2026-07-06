@@ -227,6 +227,28 @@ li {
   white-space: pre;
 }
 
+#audiohint {
+  animation: blink 2s step-end infinite;
+  background-color: var(--color-white);
+  border: solid 1px var(--color-black);
+  box-sizing: border-box;
+  color: var(--color-black);
+  font-family: "Inconsolata", monospace;
+  font-size: 12.8px;
+  font-size: 1.28rem;
+  padding: 6px 8px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 999;
+}
+
+#audiohint .comment {
+  color: var(--color-darkgray);
+}
+
 tt {
   font-size: 10.6px;
   font-size: 1.06rem;

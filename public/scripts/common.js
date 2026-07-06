@@ -237,6 +237,7 @@
        statechange is the reliable moment to flush the held note */
     actx.onstatechange = () => {
       dbg("statechange: " + actx.state + (pendingNode ? " (held note)" : ""));
+      if (actx.state === "running") showHint(false);
       if (actx.state === "running" && pendingNode) {
         const n = pendingNode;
         pendingNode = null;
@@ -319,6 +320,21 @@
     } catch (e) {}
   }
 
+  /* X's WebView only honors a clean click as the unlock gesture, and a
+     drag never produces one — so when a grab left audio locked, ask for
+     one tap (any tap fires the document click listener below) */
+  let hintEl = null;
+  function showHint(show) {
+    if (show && !hintEl) {
+      hintEl = document.createElement("div");
+      hintEl.id = "audiohint";
+      hintEl.innerHTML =
+        's.boot; <span class="comment">// tap to boot audio</span>';
+      document.body.appendChild(hintEl);
+    }
+    if (hintEl) hintEl.style.display = show ? "" : "none";
+  }
+
   /* strict WebViews (e.g. X's in-app browser) only unlock audio inside a
      touchend/click handler — pointer events don't count as a gesture there */
   function unlockAudio(e) {
@@ -337,7 +353,11 @@
     }
     Promise.resolve(a.ctx.resume()).then(() => {
       dbg("resume resolved: ctx " + a.ctx.state);
-      if (a.ctx.state !== "running") return;
+      if (a.ctx.state !== "running") {
+        if (pendingNode) showHint(true);
+        return;
+      }
+      showHint(false);
       document.removeEventListener("touchend", unlockAudio);
       document.removeEventListener("click", unlockAudio);
       if (pendingNode) {
