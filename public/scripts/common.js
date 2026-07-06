@@ -58,9 +58,9 @@
   const ctx = canvas.getContext("2d");
   const logEl = document.getElementById("log");
   const newsEl = document.getElementById("news");
-  const cordColor = getComputedStyle(document.body)
-    .getPropertyValue("--color-darkgray")
-    .trim();
+  const readCordColor = () =>
+    getComputedStyle(document.body).getPropertyValue("--color-darkgray").trim();
+  let cordColor = readCordColor();
 
   const nodes = new Map();
   let zTop = 1;
@@ -123,6 +123,66 @@
     if (!raf) raf = requestAnimationFrame(frame);
   };
 
+  /* spread the random layout: keep boxes off each other and off the text areas */
+  function relax() {
+    const GAP = 24;
+    const list = [...nodes.values()];
+    /* dx/dy: which way to escape — away from the corner the zone is anchored to */
+    const zones = [{ x: 0, y: 0, w: 320, h: 240, dx: 1, dy: 1 }]; // #log
+    if (window.innerWidth >= 720 && window.innerHeight >= 600) {
+      zones.push({
+        x: window.innerWidth - 320,
+        y: window.innerHeight - 220,
+        w: 320,
+        h: 220,
+        dx: -1,
+        dy: -1,
+      }); // #news
+    }
+    for (let round = 0; round < 120; round++) {
+      let moved = false;
+      for (const node of list) {
+        for (const z of zones) {
+          const ox = Math.min(node.tx + node.w, z.x + z.w) - Math.max(node.tx, z.x) + GAP;
+          const oy = Math.min(node.ty + node.h, z.y + z.h) - Math.max(node.ty, z.y) + GAP;
+          if (ox <= 0 || oy <= 0) continue;
+          if (ox < oy) node.tx += z.dx * ox;
+          else node.ty += z.dy * oy;
+          moved = true;
+        }
+      }
+      for (let i = 0; i < list.length; i++) {
+        for (let j = i + 1; j < list.length; j++) {
+          const a = list[i];
+          const b = list[j];
+          const ox = Math.min(a.tx + a.w, b.tx + b.w) - Math.max(a.tx, b.tx) + GAP;
+          const oy = Math.min(a.ty + a.h, b.ty + b.h) - Math.max(a.ty, b.ty) + GAP;
+          if (ox <= 0 || oy <= 0) continue;
+          if (ox < oy) {
+            const push = ((a.tx + a.w / 2 < b.tx + b.w / 2 ? -1 : 1) * ox) / 2;
+            a.tx += push;
+            b.tx -= push;
+          } else {
+            const push = ((a.ty + a.h / 2 < b.ty + b.h / 2 ? -1 : 1) * oy) / 2;
+            a.ty += push;
+            b.ty -= push;
+          }
+          moved = true;
+        }
+      }
+      for (const node of list) {
+        node.tx = clamp(node.tx, MARGIN, window.innerWidth - node.w - MARGIN);
+        node.ty = clamp(node.ty, MARGIN, window.innerHeight - node.h - MARGIN);
+      }
+      if (!moved) break;
+    }
+    for (const node of list) {
+      node.x = node.tx;
+      node.y = node.ty;
+      place(node);
+    }
+  }
+
   function showInfo(name) {
     booting = false;
     logEl.innerHTML = INFO[name] || "";
@@ -174,6 +234,15 @@
     el.addEventListener("pointerup", release);
     el.addEventListener("pointercancel", release);
   }
+  relax();
+
+  /* follow the OS color scheme */
+  window
+    .matchMedia("(prefers-color-scheme: dark)")
+    .addEventListener("change", () => {
+      cordColor = readCordColor();
+      kick();
+    });
 
   /* crisp cords on any display, and survive window resizes */
   function resize() {

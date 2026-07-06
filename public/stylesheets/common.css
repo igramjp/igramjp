@@ -5,6 +5,17 @@
   --color-darkgray: #b8b8b8;
   --color-lightgray: #f7f7f7;
   --color-white: #ffffff;
+  --color-shadow: rgba(17, 17, 17, 0.08);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-black: #e8e8e8;
+    --color-darkgray: #6e6e6e;
+    --color-lightgray: #1d1d1d;
+    --color-white: #121212;
+    --color-shadow: rgba(0, 0, 0, 0.6);
+  }
 }
 
 * {
@@ -108,7 +119,7 @@ li {
 
 .object.drag {
   cursor: grabbing;
-  box-shadow: 3px 3px 0 rgba(17, 17, 17, 0.08);
+  box-shadow: 3px 3px 0 var(--color-shadow);
 }
 
 .main {
@@ -206,7 +217,7 @@ tt {
   display: block;
   max-width: max-content;
   line-height: 1;
-  border-bottom: solid 1px #000;
+  border-bottom: solid 1px var(--color-black);
   box-sizing: border-box;
 }
 
