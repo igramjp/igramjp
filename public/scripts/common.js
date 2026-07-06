@@ -196,22 +196,6 @@
      Pitch is quantized to a ritsu pentatonic rooted in the oshiki gamut
      (Oshiki A = 430 Hz), so overlapping notes always agree; dragging up
      and down plays the degrees the box crosses. */
-  /* on-page diagnostics for WebViews with no devtools: open /?debug */
-  const DEBUG = /(^|[?&])debug/.test(location.search);
-  let dbgEl = null;
-  function dbg(msg) {
-    if (!DEBUG) return;
-    if (!dbgEl) {
-      dbgEl = document.createElement("div");
-      dbgEl.style.cssText =
-        "position:fixed;top:45%;left:1em;right:1em;z-index:9999;" +
-        "font:11px monospace;color:#e04040;pointer-events:none;white-space:pre-wrap;";
-      document.body.appendChild(dbgEl);
-    }
-    dbgEl.textContent = (msg + "\n" + dbgEl.textContent)
-      .split("\n").slice(0, 14).join("\n");
-  }
-
   const SCALE = [0, 2, 5, 7, 9]; // ritsu: D E G A B
   const OCTAVES = 5;
   const STEPS = SCALE.length * OCTAVES + 1;
@@ -229,14 +213,12 @@
     const AC = window.AudioContext || window.webkitAudioContext;
     if (!AC) return null;
     const actx = new AC();
-    dbg("ctx created: " + actx.state);
     /* some WebViews (e.g. X's in-app browser) create the context suspended
        even inside a gesture */
     if (actx.state === "suspended") actx.resume();
     /* WebKit may resolve resume() before state flips to "running";
        statechange is the reliable moment to flush the held note */
     actx.onstatechange = () => {
-      dbg("statechange: " + actx.state + (pendingNode ? " (held note)" : ""));
       if (actx.state === "running") showHint(false);
       if (actx.state === "running" && pendingNode) {
         const n = pendingNode;
@@ -288,11 +270,9 @@
       const a = ensureAudio();
       if (!a || activeNotes >= 16) return;
       if (a.ctx.state !== "running") {
-        dbg("note held: ctx " + a.ctx.state);
         pendingNode = node;
         return;
       }
-      dbg("note play: " + node.name);
       const deg = degreeAt(node);
       const octave = Math.floor(deg / SCALE.length);
       const freq = NOTE_ROOT * Math.pow(2, (octave * 12 + SCALE[deg % SCALE.length]) / 12);
@@ -337,10 +317,9 @@
 
   /* strict WebViews (e.g. X's in-app browser) only unlock audio inside a
      touchend/click handler — pointer events don't count as a gesture there */
-  function unlockAudio(e) {
+  function unlockAudio() {
     const a = ensureAudio();
     if (!a) return;
-    dbg("unlock via " + (e && e.type ? e.type : "release") + ": ctx " + a.ctx.state);
     /* classic unlock: a silent buffer started synchronously inside the
        gesture nudges WebViews that ignore resume() alone */
     if (a.ctx.state !== "running") {
@@ -354,11 +333,9 @@
     /* resume()'s promise can hang forever when the gesture is rejected,
        so the hint must not wait for it — re-check on a timer instead */
     setTimeout(() => {
-      dbg("post-check: ctx " + a.ctx.state);
       if (a.ctx.state !== "running" && pendingNode) showHint(true);
     }, 350);
     Promise.resolve(a.ctx.resume()).then(() => {
-      dbg("resume resolved: ctx " + a.ctx.state);
       if (a.ctx.state !== "running") {
         if (pendingNode) showHint(true);
         return;
