@@ -93,9 +93,8 @@
       if (!a || !b) continue;
       const p = port(a);
       const q = port(b);
-      const sag = Math.min(70, Math.hypot(q.x - p.x, q.y - p.y) * 0.25) + 6;
       ctx.moveTo(p.x, p.y);
-      ctx.bezierCurveTo(p.x, p.y + sag, q.x, q.y + sag, q.x, q.y);
+      ctx.lineTo(q.x, q.y);
     }
     ctx.stroke();
   }
