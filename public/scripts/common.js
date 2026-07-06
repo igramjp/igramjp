@@ -197,9 +197,9 @@
      (Oshiki A = 430 Hz), so overlapping notes always agree; dragging up
      and down plays the degrees the box crosses. */
   const SCALE = [0, 2, 5, 7, 9]; // ritsu: D E G A B
-  const OCTAVES = 3;
+  const OCTAVES = 5;
   const STEPS = SCALE.length * OCTAVES + 1;
-  const NOTE_ROOT = (430 * Math.pow(2, -7 / 12)) / 2; // D3 below Oshiki A
+  const NOTE_ROOT = (430 * Math.pow(2, -7 / 12)) / 4; // D2, two octaves below Oshiki A
   const NOTE_SECONDS = 6;
   let audio = null;
   let activeNotes = 0;
