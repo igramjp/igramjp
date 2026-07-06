@@ -290,6 +290,25 @@
     } catch (e) {}
   }
 
+  /* strict WebViews (e.g. X's in-app browser) only unlock audio inside a
+     touchend/click handler — pointer events don't count as a gesture there */
+  function unlockAudio() {
+    const a = ensureAudio();
+    if (!a) return;
+    Promise.resolve(a.ctx.resume()).then(() => {
+      if (a.ctx.state !== "running") return;
+      document.removeEventListener("touchend", unlockAudio);
+      document.removeEventListener("click", unlockAudio);
+      if (pendingNode) {
+        const n = pendingNode;
+        pendingNode = null;
+        playNote(n);
+      }
+    });
+  }
+  document.addEventListener("touchend", unlockAudio);
+  document.addEventListener("click", unlockAudio);
+
   /* nodes */
   for (const el of document.querySelectorAll(".object")) {
     const node = {
@@ -336,18 +355,9 @@
       kick();
     });
     const release = (e) => {
-      /* WebKit may only unlock audio on pointerup/touchend, not pointerdown;
+      /* WebKit may only unlock audio on release, not pointerdown;
          once unlocked, replay the note the tap meant to play */
-      const a = ensureAudio();
-      if (a && pendingNode) {
-        Promise.resolve(a.ctx.resume()).then(() => {
-          if (a.ctx.state === "running" && pendingNode) {
-            const n = pendingNode;
-            pendingNode = null;
-            playNote(n);
-          }
-        });
-      }
+      unlockAudio();
       if (!node.grab || e.pointerId !== node.grab.id) return;
       node.grab = null;
       el.classList.remove("drag");
