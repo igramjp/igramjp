@@ -1,0 +1,672 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<title>調子の輪 — 十二律 × 純正律のずれの地図</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  :root {
+    --paper: #F2F0E9;
+    --paper-2: #EAE7DD;
+    --ink: #26221A;
+    --muted: #6B6353;
+    --faint: #A39B89;
+    --hairline: rgba(38, 34, 26, 0.16);
+    --gold: #8C6D1E;
+    --indigo: #2D5FAA;
+    --verm: #B23A2A;
+    --gold-soft: rgba(140, 109, 30, 0.28);
+    --indigo-soft: rgba(45, 95, 170, 0.16);
+    --verm-soft: rgba(178, 58, 42, 0.14);
+    --card: #FFFFFF;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --paper: #17140F;
+      --paper-2: #1E1A13;
+      --ink: #EAE3D3;
+      --muted: #9C937F;
+      --faint: #6A614F;
+      --hairline: rgba(234, 227, 211, 0.18);
+      --gold: #AC851C;
+      --indigo: #5B8FD6;
+      --verm: #D96146;
+      --gold-soft: rgba(172, 133, 28, 0.35);
+      --indigo-soft: rgba(91, 143, 214, 0.2);
+      --verm-soft: rgba(217, 97, 70, 0.18);
+      --card: #211D15;
+    }
+  }
+  :root[data-theme="light"] {
+    --paper: #F2F0E9;
+    --paper-2: #EAE7DD;
+    --ink: #26221A;
+    --muted: #6B6353;
+    --faint: #A39B89;
+    --hairline: rgba(38, 34, 26, 0.16);
+    --gold: #8C6D1E;
+    --indigo: #2D5FAA;
+    --verm: #B23A2A;
+    --gold-soft: rgba(140, 109, 30, 0.28);
+    --indigo-soft: rgba(45, 95, 170, 0.16);
+    --verm-soft: rgba(178, 58, 42, 0.14);
+    --card: #FFFFFF;
+  }
+  :root[data-theme="dark"] {
+    --paper: #17140F;
+    --paper-2: #1E1A13;
+    --ink: #EAE3D3;
+    --muted: #9C937F;
+    --faint: #6A614F;
+    --hairline: rgba(234, 227, 211, 0.18);
+    --gold: #AC851C;
+    --indigo: #5B8FD6;
+    --verm: #D96146;
+    --gold-soft: rgba(172, 133, 28, 0.35);
+    --indigo-soft: rgba(91, 143, 214, 0.2);
+    --verm-soft: rgba(217, 97, 70, 0.18);
+    --card: #211D15;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Yu Gothic", "Noto Sans JP", sans-serif;
+    font-size: 15px;
+    line-height: 1.75;
+  }
+  .serif { font-family: "Hiragino Mincho ProN", "Yu Mincho", "Noto Serif JP", serif; }
+  main { max-width: 1060px; margin: 0 auto; padding: 48px 24px 80px; }
+
+  /* ---------- header ---------- */
+  header { margin-bottom: 40px; }
+  .eyebrow {
+    font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 14px;
+  }
+  .eyebrow b { color: var(--gold); font-weight: 600; }
+  h1 {
+    font-family: "Hiragino Mincho ProN", "Yu Mincho", "Noto Serif JP", serif;
+    font-size: clamp(28px, 4.5vw, 44px); font-weight: 600;
+    letter-spacing: 0.04em; line-height: 1.3; margin: 0 0 16px; text-wrap: balance;
+  }
+  .lede { max-width: 620px; color: var(--muted); margin: 0; }
+  .lede em { font-style: normal; color: var(--ink); }
+
+  /* ---------- legend ---------- */
+  .legend {
+    display: flex; flex-wrap: wrap; gap: 10px 26px; align-items: center;
+    margin: 28px 0 8px; font-size: 12.5px; color: var(--muted);
+  }
+  .legend .key { display: inline-flex; align-items: center; gap: 8px; }
+  .swatch-tick { width: 16px; height: 3px; background: var(--gold); border-radius: 2px; }
+  .swatch-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--indigo); }
+  .swatch-arc { width: 16px; height: 3px; background: var(--verm); border-radius: 2px; }
+  .legend .note { font-size: 11.5px; color: var(--faint); }
+
+  /* ---------- tabs ---------- */
+  .tabs { display: flex; flex-wrap: wrap; gap: 8px; margin: 20px 0 28px; }
+  .tab {
+    appearance: none; border: 1px solid var(--hairline); background: transparent;
+    color: var(--muted); border-radius: 999px; padding: 7px 16px 8px;
+    font-family: "Hiragino Mincho ProN", "Yu Mincho", serif; font-size: 15px;
+    letter-spacing: 0.06em; cursor: pointer; line-height: 1.4;
+    transition: background 0.15s, color 0.15s, border-color 0.15s;
+  }
+  .tab small { display: block; font-family: "Hiragino Kaku Gothic ProN", "Hiragino Sans", sans-serif;
+    font-size: 9.5px; letter-spacing: 0.12em; color: var(--faint); line-height: 1.1; }
+  .tab:hover { border-color: var(--gold); color: var(--ink); }
+  .tab[aria-selected="true"] {
+    background: var(--ink); color: var(--paper); border-color: var(--ink);
+  }
+  .tab[aria-selected="true"] small { color: var(--paper); opacity: 0.6; }
+  .tab:focus-visible { outline: 2px solid var(--indigo); outline-offset: 2px; }
+
+  /* ---------- hero ---------- */
+  .hero { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 32px; align-items: start; }
+  @media (max-width: 860px) { .hero { grid-template-columns: 1fr; } }
+  .wheel-wrap { position: relative; }
+  #wheel { width: 100%; height: auto; display: block; }
+
+  .panel { display: flex; flex-direction: column; gap: 14px; padding-top: 12px; }
+  .panel .p-title { font-family: "Hiragino Mincho ProN", "Yu Mincho", serif;
+    font-size: 21px; letter-spacing: 0.08em; margin: 0; }
+  .panel .p-sub { font-size: 12px; color: var(--muted); margin: -10px 0 0; }
+  .stat-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .stat {
+    border: 1px solid var(--hairline); border-radius: 10px; padding: 10px 14px 12px;
+    background: var(--paper-2);
+  }
+  .stat .k { font-size: 10.5px; letter-spacing: 0.14em; color: var(--muted); }
+  .stat .v { font-family: "Hiragino Mincho ProN", "Yu Mincho", serif;
+    font-size: 22px; line-height: 1.3; font-variant-numeric: tabular-nums; }
+  .stat .v small { font-size: 12px; color: var(--muted); font-family: "Hiragino Kaku Gothic ProN", sans-serif; }
+  .stat.accent .v { color: var(--verm); }
+  .panel .blurb { font-size: 13px; color: var(--muted); margin: 0; }
+  .panel .blurb b { color: var(--ink); font-weight: 600; }
+  .rootbadge {
+    display: inline-flex; align-items: baseline; gap: 8px;
+    border: 1px solid var(--indigo); color: var(--indigo);
+    border-radius: 8px; padding: 6px 12px; font-size: 13px; width: fit-content;
+  }
+  .rootbadge b { font-family: "Hiragino Mincho ProN", "Yu Mincho", serif; font-size: 19px; }
+
+  /* ---------- svg shared ---------- */
+  text { fill: var(--ink); }
+  .t-ritsu { font-family: "Hiragino Mincho ProN", "Yu Mincho", serif; font-size: 19px; letter-spacing: 0.02em; }
+  .t-west { font-size: 10.5px; fill: var(--muted); font-variant-numeric: tabular-nums; }
+  .t-cents { font-size: 11px; fill: var(--verm); font-weight: 600; font-variant-numeric: tabular-nums; }
+  .t-center-name { font-family: "Hiragino Mincho ProN", "Yu Mincho", serif; font-size: 34px; letter-spacing: 0.1em; }
+  .t-center-sub { font-size: 11.5px; fill: var(--muted); }
+  .t-kyu { font-size: 10px; fill: var(--paper); font-weight: 600; }
+  .dim { opacity: 0.28; }
+
+  /* ---------- small multiples ---------- */
+  section.multiples { margin-top: 72px; }
+  h2 {
+    font-family: "Hiragino Mincho ProN", "Yu Mincho", serif; font-weight: 600;
+    font-size: 22px; letter-spacing: 0.06em; margin: 0 0 6px;
+  }
+  .h2-sub { color: var(--muted); font-size: 13px; margin: 0 0 24px; max-width: 640px; }
+  .grid6 { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 18px; }
+  .mini {
+    border: 1px solid var(--hairline); border-radius: 12px; background: var(--paper-2);
+    padding: 14px 12px 12px; text-align: center; cursor: pointer;
+    transition: border-color 0.15s, transform 0.15s;
+  }
+  .mini:hover { border-color: var(--gold); }
+  .mini.current { border-color: var(--ink); }
+  .mini svg { width: 100%; max-width: 150px; height: auto; }
+  .mini .m-name { font-family: "Hiragino Mincho ProN", "Yu Mincho", serif; font-size: 16px; letter-spacing: 0.08em; }
+  .mini .m-meta { font-size: 11px; color: var(--muted); font-variant-numeric: tabular-nums; }
+  .mini .m-meta b { color: var(--indigo); font-weight: 600; }
+  .mini .m-meta .off { color: var(--verm); }
+
+  /* ---------- chain ---------- */
+  section.chain { margin-top: 72px; }
+  #chainfig { width: 100%; height: auto; display: block; margin-top: 8px; }
+  .t-chain-ritsu { font-family: "Hiragino Mincho ProN", "Yu Mincho", serif; font-size: 15px; }
+  .t-chain-dev { font-size: 10px; fill: var(--muted); font-variant-numeric: tabular-nums; }
+  .t-anno { font-size: 12px; fill: var(--muted); }
+  .t-anno-v { font-size: 12px; fill: var(--verm); font-weight: 600; }
+
+  /* ---------- table ---------- */
+  section.data { margin-top: 64px; }
+  details { border: 1px solid var(--hairline); border-radius: 12px; background: var(--paper-2); }
+  summary { padding: 14px 20px; cursor: pointer; font-size: 14px; letter-spacing: 0.04em; }
+  summary:focus-visible { outline: 2px solid var(--indigo); outline-offset: -2px; }
+  .tablewrap { overflow-x: auto; padding: 0 20px 18px; }
+  table { border-collapse: collapse; width: 100%; min-width: 640px; font-size: 13px; }
+  th, td { text-align: right; padding: 7px 12px; border-top: 1px solid var(--hairline);
+    font-variant-numeric: tabular-nums; white-space: nowrap; }
+  th { color: var(--muted); font-weight: 500; font-size: 11.5px; letter-spacing: 0.08em; }
+  th:first-child, td:first-child, th:nth-child(2), td:nth-child(2) { text-align: left; }
+  td.off { color: var(--verm); font-weight: 600; }
+  td.match { color: var(--indigo); }
+
+  footer { margin-top: 56px; padding-top: 20px; border-top: 1px solid var(--hairline);
+    font-size: 12px; color: var(--muted); max-width: 720px; }
+  footer p { margin: 0 0 8px; }
+
+  /* ---------- tooltip ---------- */
+  #tip {
+    position: fixed; pointer-events: none; z-index: 10; display: none;
+    background: var(--card); color: var(--ink); border: 1px solid var(--hairline);
+    border-radius: 10px; padding: 10px 14px; font-size: 12px; line-height: 1.6;
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.18); max-width: 240px;
+  }
+  #tip .tt-head { font-family: "Hiragino Mincho ProN", "Yu Mincho", serif; font-size: 15px; margin-bottom: 2px; }
+  #tip .tt-row { display: flex; justify-content: space-between; gap: 16px; font-variant-numeric: tabular-nums; }
+  #tip .tt-row .l { color: var(--muted); }
+  #tip .tt-off { color: var(--verm); font-weight: 600; }
+  #tip .tt-ok { color: var(--indigo); font-weight: 600; }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; }
+  }
+</style>
+
+</head>
+<body>
+<main>
+  <header>
+    <div class="eyebrow"><b>oshiki</b> · 三分損益法 × 純正律 · A₄ = 430 Hz</div>
+    <h1 class="serif">調子の輪<br>十二律と純正律の、ずれの地図</h1>
+    <p class="lede">雅楽の十二律は壱越(D)から三分損益法で導かれ、調子が変わっても<em>作り直されない</em>。
+      一方シンセの純正律はルートから張り直される。六つの調子それぞれで、推奨ルートを選んだときに
+      <em>どの音が合い、どの音が約21.5¢(シントニックコンマ)離れるか</em>を描いた。</p>
+  </header>
+
+  <div class="legend" role="list">
+    <span class="key" role="listitem"><span class="swatch-tick"></span>三分損益法(雅楽の十二律)</span>
+    <span class="key" role="listitem"><span class="swatch-dot"></span>純正律(シンセ)</span>
+    <span class="key" role="listitem"><span class="swatch-arc"></span>ずれ(シントニックコンマ)</span>
+    <span class="note">※ ずれの角度は実際の2.5倍に誇張して描画</span>
+  </div>
+
+  <div class="tabs" role="tablist" aria-label="調子の選択" id="tabs"></div>
+
+  <div class="hero">
+    <div class="wheel-wrap">
+      <svg id="wheel" viewBox="-330 -330 660 660" role="img" aria-label="選択中の調子における十二律と純正律のずれの円環図"></svg>
+    </div>
+    <aside class="panel" id="panel"></aside>
+  </div>
+
+  <section class="multiples">
+    <h2>六調子、ひと目で</h2>
+    <p class="h2-sub">藍の点が金の刻みに重なっていれば一致(2¢以内)。朱で開いていれば約21.5¢のずれ ——
+      それはシンセ側の純正三度・六度そのもの。</p>
+    <div class="grid6" id="minis"></div>
+  </section>
+
+  <section class="chain">
+    <h2>なぜ双調だけ壊れるのか — 五度の階段</h2>
+    <p class="h2-sub">三分損益法は純正五度(702¢)を12回積む。平均律の五度より一段ごとに約2¢広いので、
+      壱越から遠いほど高く積み上がり、最後の双調→壱越で輪が閉じない。この約23.5¢がピタゴラスコンマ。
+      双調はその崖っぷちに宮を置く調子。</p>
+    <svg id="chainfig" viewBox="0 0 1000 300" role="img" aria-label="五度連鎖による各律の平均律からの偏差の階段図"></svg>
+  </section>
+
+  <section class="data">
+    <h2>数値で見る</h2>
+    <p class="h2-sub">各調子の骨格五音。周波数は中央オクターブ(C4–B4)、A₄ = 430 Hz 基準。</p>
+    <details>
+      <summary>全調子・全骨格音の対照表を開く</summary>
+      <div class="tablewrap">
+        <table id="datatable">
+          <thead>
+            <tr><th>調子</th><th>音</th><th>雅楽 (Hz)</th><th>シンセ (Hz)</th><th>ずれ (¢)</th><th>うなり (回/秒)</th></tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </details>
+  </section>
+
+  <footer>
+    <p>前提:雅楽側は壱越(D)起点の三分損益法・黄鐘(A)= 430 Hz固定という理論値。シンセ側は5-limit純正律を
+      調子ごとの推奨ルートから展開し、A = 430 Hzに揃えた(盤渉調のみルートBを雅楽の盤渉に直接合わせる)。</p>
+    <p>実際の笙は理論値から数セント揺れ、篳篥は奏法でさらに動く。当日は笙の黄鐘を実測して基準にすること。
+      ずれとして描いた約21.5¢は欠陥ではなく、シンセが純正三度を取っている証:雅楽の宮・徵に対しては純正に響き、
+      笙が同じ律を持続したときだけ毎秒数回のうなりになる。</p>
+    <p><a href="../" style="color: var(--indigo); text-decoration: none;">← oshiki アプリ(周波数表 &amp; Web MIDI)</a>
+      · <a href="https://github.com/igramjp/oshiki" target="_blank" rel="noreferrer noopener"
+        style="color: var(--indigo); text-decoration: none;">github.com/igramjp/oshiki</a></p>
+  </footer>
+</main>
+
+<div id="tip" role="tooltip"></div>
+
+<script>
+(function () {
+  'use strict';
+
+  // ---------- tuning math (mirrors oshiki's src/main.rs) ----------
+  var SANBUN = [1, 2187/2048, 9/8, 19683/16384, 81/64, 177147/131072, 729/512, 3/2, 6561/4096, 27/16, 59049/32768, 243/128];
+  var JUST   = [1, 16/15, 9/8, 6/5, 5/4, 4/3, 45/32, 3/2, 8/5, 5/3, 9/5, 15/8];
+  var RITSU  = ['神仙','上無','壱越','断金','平調','勝絶','下無','双調','鳧鐘','黄鐘','鸞鏡','盤渉'];
+  var WEST   = ['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];
+  var A4 = 430, A_PC = 9, D_PC = 2;
+  var cents = function (r) { return 1200 * Math.log2(r); };
+
+  // Deviation from Equal Temperament (A = 0¢), fixed gamut: sanbun from D, A anchored.
+  var devD = -(cents(3/2) - 700);
+  var devGamut = WEST.map(function (_, pc) {
+    var i = (pc - D_PC + 12) % 12;
+    return cents(SANBUN[i]) - 100 * i + devD;
+  });
+
+  // Deviation of JI-from-root, root derived from A (or pinned to the gamut).
+  function devJIFromRoot(rootPc, pinRootToGamut) {
+    var j = (A_PC - rootPc + 12) % 12;
+    var devRoot = pinRootToGamut ? devGamut[rootPc] : -(cents(JUST[j]) - 100 * j);
+    return WEST.map(function (_, pc) {
+      var i = (pc - rootPc + 12) % 12;
+      return devRoot + cents(JUST[i]) - 100 * i;
+    });
+  }
+
+  // Frequency in the C4–B4 octave (oshiki's table convention).
+  function freqInOctave(pc, rootPc, ratios, devRootless) {
+    // simplest: reconstruct from ET A4 and the deviation value
+    return A4 * Math.pow(2, (pc - A_PC) / 12) * Math.pow(2, devRootless[pc] / 1200);
+  }
+
+  var CHOSHI = [
+    { name: '壱越調', kana: 'いちこつちょう', type: '呂', kyu: 2,  root: 2,  pin: false, tones: [2, 4, 6, 9, 11],
+      note: '骨格のD・E・Aは完全一致。<b>F#とB</b>はシンセの純正三度・六度で、雅楽の下無・盤渉から21.5¢。' },
+    { name: '平調',   kana: 'ひょうじょう', type: '律', kyu: 4,  root: 4,  pin: false, tones: [4, 6, 9, 11, 1],
+      note: '四度(A)まで含めて骨格が全部一致する優等生。離れるのは<b>C#(羽)</b>ひとつだけ。' },
+    { name: '双調',   kana: 'そうじょう',   type: '呂', kyu: 7,  root: 9,  pin: false, tones: [7, 9, 11, 2, 4],
+      note: 'ルートは宮のGではなく<b>A(黄鐘)</b>。五音すべて2¢以内で一致し、G–Bは純正5/4。六調子で最も美しくハマる。' },
+    { name: '黄鐘調', kana: 'おうしきちょう', type: '律', kyu: 9,  root: 9,  pin: false, tones: [9, 11, 2, 4, 6],
+      note: '基準音Aが宮。骨格は完全一致で、<b>F#(羽)</b>だけが純正六度として21.5¢離れる。' },
+    { name: '盤渉調', kana: 'ばんしきちょう', type: '律', kyu: 11, root: 11, pin: true, tones: [11, 1, 4, 6, 8],
+      note: 'A=430アンカーではルートBがコンマ低く出るため、<b>シンセのBを雅楽の盤渉に直接合わせる</b>。すると骨格一致、<b>G#(羽)</b>のみ21.5¢。' },
+    { name: '太食調', kana: 'たいしきちょう', type: '呂', kyu: 4,  root: 4,  pin: false, tones: [4, 6, 8, 11, 1],
+      note: '骨格のE・F#・Bは一致。呂旋ゆえ三度が骨格に入り、<b>G#(角)とC#(羽)</b>の二音が21.5¢離れる。' }
+  ];
+  CHOSHI.forEach(function (c) {
+    c.devJI = devJIFromRoot(c.root, c.pin);
+    c.diffs = c.tones.map(function (pc) { return c.devJI[pc] - devGamut[pc]; });
+    c.offTones = c.tones.filter(function (pc) { return Math.abs(c.devJI[pc] - devGamut[pc]) > 3; });
+  });
+
+  var SVGNS = 'http://www.w3.org/2000/svg';
+  function el(parent, tag, attrs, text) {
+    var n = document.createElementNS(SVGNS, tag);
+    for (var k in attrs) n.setAttribute(k, attrs[k]);
+    if (text != null) n.textContent = text;
+    parent.appendChild(n);
+    return n;
+  }
+  var fmt = function (x, d) { return (x >= 0 ? '+' : '−') + Math.abs(x).toFixed(d == null ? 1 : d); };
+
+  // pitch-class angle: D (壱越) at 12 o'clock, ascending clockwise
+  var angleOf = function (pc) { return ((pc - D_PC + 12) % 12) * 30 - 90; };
+  var EXAG = 0.75; // degrees per cent (true scale is 0.3 °/¢ → ×2.5)
+  var rad = function (deg) { return deg * Math.PI / 180; };
+  var XY = function (deg, r) { return [r * Math.cos(rad(deg)), r * Math.sin(rad(deg))]; };
+
+  // ---------- hero wheel ----------
+  var wheel = document.getElementById('wheel');
+  var tip = document.getElementById('tip');
+
+  function arcPath(a0, a1, r) {
+    var p0 = XY(a0, r), p1 = XY(a1, r);
+    var large = Math.abs(a1 - a0) > 180 ? 1 : 0, sweep = a1 > a0 ? 1 : 0;
+    return 'M' + p0[0].toFixed(2) + ' ' + p0[1].toFixed(2) +
+      ' A' + r + ' ' + r + ' 0 ' + large + ' ' + sweep + ' ' + p1[0].toFixed(2) + ' ' + p1[1].toFixed(2);
+  }
+
+  function drawWheel(c) {
+    wheel.textContent = '';
+    var css = getComputedStyle(document.documentElement);
+    var col = function (v) { return css.getPropertyValue(v).trim(); };
+
+    el(wheel, 'circle', { cx: 0, cy: 0, r: 251, fill: 'none', stroke: col('--hairline'), 'stroke-width': 1 });
+
+    // backbone chords: pure 4th/5th pairs among core tones
+    for (var i = 0; i < c.tones.length; i++) {
+      for (var j = i + 1; j < c.tones.length; j++) {
+        var a = c.tones[i], b = c.tones[j];
+        var iv = (b - a + 12) % 12;
+        if (iv !== 5 && iv !== 7) continue;
+        var ok = Math.abs(c.devJI[a] - devGamut[a]) <= 3 && Math.abs(c.devJI[b] - devGamut[b]) <= 3;
+        var pa = XY(angleOf(a), 234), pb = XY(angleOf(b), 234);
+        el(wheel, 'line', {
+          x1: pa[0], y1: pa[1], x2: pb[0], y2: pb[1],
+          stroke: ok ? col('--gold') : col('--verm'),
+          'stroke-width': ok ? 1.6 : 1.1,
+          'stroke-dasharray': ok ? 'none' : '3 5',
+          opacity: ok ? 0.55 : 0.45
+        });
+      }
+    }
+
+    WEST.forEach(function (w, pc) {
+      var core = c.tones.indexOf(pc) >= 0;
+      var base = angleOf(pc);
+      var diff = c.devJI[pc] - devGamut[pc];
+      var off = Math.abs(diff) > 3;
+      var g = el(wheel, 'g', core ? {} : { class: 'dim' });
+
+      // gamut tick (gold)
+      var t0 = XY(base, 236), t1 = XY(base, 266);
+      el(g, 'line', { x1: t0[0], y1: t0[1], x2: t1[0], y2: t1[1],
+        stroke: col('--gold'), 'stroke-width': core ? 4 : 2, 'stroke-linecap': 'round' });
+
+      // deviation arc + JI dot (only meaningful on core tones)
+      if (core) {
+        var jiA = base + diff * EXAG;
+        if (off) {
+          el(g, 'path', { d: arcPath(base, jiA, 251), fill: 'none',
+            stroke: col('--verm'), 'stroke-width': 2.5, 'stroke-linecap': 'round' });
+          var lbl = XY(base + diff * EXAG * 0.5, 210);
+          el(g, 'text', { x: lbl[0], y: lbl[1], class: 't-cents',
+            'text-anchor': 'middle', 'dominant-baseline': 'middle' }, fmt(diff) + '¢');
+        }
+        var dp = XY(jiA, 251);
+        el(g, 'circle', { cx: dp[0], cy: dp[1], r: 7, fill: col('--indigo'),
+          stroke: col('--paper'), 'stroke-width': 2 });
+      }
+
+      // labels
+      var lr = XY(base, 296);
+      el(g, 'text', { x: lr[0], y: lr[1], class: 't-ritsu',
+        'text-anchor': 'middle', 'dominant-baseline': 'middle' }, RITSU[pc]);
+      var lw = XY(base, 218);
+      if (!core || !off) {
+        el(g, 'text', { x: lw[0], y: lw[1], class: 't-west',
+          'text-anchor': 'middle', 'dominant-baseline': 'middle' }, w);
+      }
+
+      // kyū marker
+      if (pc === c.kyu) {
+        var kb = XY(base, 316);
+        el(g, 'circle', { cx: kb[0], cy: kb[1], r: 9, fill: col('--ink') });
+        el(g, 'text', { x: kb[0], y: kb[1] + 0.5, class: 't-kyu',
+          'text-anchor': 'middle', 'dominant-baseline': 'middle' }, '宮');
+      }
+
+      // hover target
+      var hp = XY(base, 251);
+      var hit = el(wheel, 'circle', { cx: hp[0], cy: hp[1], r: 26, fill: 'transparent', cursor: 'default' });
+      hit.addEventListener('mousemove', function (ev) { showTip(ev, c, pc); });
+      hit.addEventListener('mouseleave', hideTip);
+    });
+
+    // center
+    el(wheel, 'text', { x: 0, y: -14, class: 't-center-name', 'text-anchor': 'middle' }, c.name);
+    el(wheel, 'text', { x: 0, y: 12, class: 't-center-sub', 'text-anchor': 'middle' },
+      c.kana + ' · ' + c.type + '旋 · 宮 = ' + RITSU[c.kyu] + ' (' + WEST[c.kyu] + ')');
+    var okCount = c.tones.length - c.offTones.length;
+    el(wheel, 'text', { x: 0, y: 34, class: 't-center-sub', 'text-anchor': 'middle' },
+      '骨格五音のうち ' + okCount + ' 音が一致 (≤2¢)');
+  }
+
+  function showTip(ev, c, pc) {
+    var core = c.tones.indexOf(pc) >= 0;
+    var diff = c.devJI[pc] - devGamut[pc];
+    var fG = A4 * Math.pow(2, (pc - A_PC) / 12 + devGamut[pc] / 1200);
+    var fJ = A4 * Math.pow(2, (pc - A_PC) / 12 + c.devJI[pc] / 1200);
+    var beats = Math.abs(fG - fJ);
+    var h = '<div class="tt-head">' + RITSU[pc] + ' <span style="opacity:.55">' + WEST[pc] + '4</span></div>';
+    h += '<div class="tt-row"><span class="l">雅楽</span><span>' + fG.toFixed(2) + ' Hz</span></div>';
+    if (core) {
+      h += '<div class="tt-row"><span class="l">シンセ</span><span>' + fJ.toFixed(2) + ' Hz</span></div>';
+      h += Math.abs(diff) > 3
+        ? '<div class="tt-row"><span class="l">ずれ</span><span class="tt-off">' + fmt(diff) + '¢ · うなり' + beats.toFixed(1) + '回/秒</span></div>'
+        : '<div class="tt-row"><span class="l">ずれ</span><span class="tt-ok">' + fmt(diff) + '¢ — 一致</span></div>';
+    } else {
+      h += '<div class="tt-row"><span class="l">この調子の骨格外</span><span></span></div>';
+    }
+    tip.innerHTML = h;
+    tip.style.display = 'block';
+    var x = ev.clientX + 16, y = ev.clientY + 16;
+    if (x + 250 > innerWidth) x = ev.clientX - 250;
+    if (y + 120 > innerHeight) y = ev.clientY - 120;
+    tip.style.left = x + 'px';
+    tip.style.top = y + 'px';
+  }
+  function hideTip() { tip.style.display = 'none'; }
+
+  // ---------- panel ----------
+  var panel = document.getElementById('panel');
+  function drawPanel(c) {
+    var worst = 0;
+    c.diffs.forEach(function (d) { if (Math.abs(d) > Math.abs(worst)) worst = d; });
+    var okCount = c.tones.length - c.offTones.length;
+    var offNames = c.offTones.map(function (pc) { return WEST[pc]; }).join('・');
+    panel.innerHTML =
+      '<h3 class="p-title">' + c.name + '<span style="font-size:13px;color:var(--muted)"> ── ' + c.type + '旋</span></h3>' +
+      '<p class="p-sub">骨格五音: ' + c.tones.map(function (pc) { return WEST[pc]; }).join(' · ') + '</p>' +
+      '<span class="rootbadge">シンセのJIルート <b>' + WEST[c.root] + '</b>' +
+      (c.root !== c.kyu ? '<span style="font-size:11px">(宮ではない!)</span>' : '') + '</span>' +
+      '<div class="stat-row">' +
+        '<div class="stat"><div class="k">一致 (≤2¢)</div><div class="v">' + okCount + '<small> / 5音</small></div></div>' +
+        '<div class="stat' + (c.offTones.length ? ' accent' : '') + '"><div class="k">最大のずれ</div><div class="v">' +
+          (c.offTones.length ? fmt(worst) + '<small>¢ ' + offNames + '</small>' : '±2<small>¢ 以内</small>') + '</div></div>' +
+      '</div>' +
+      '<p class="blurb">' + c.note + '</p>';
+  }
+
+  // ---------- tabs ----------
+  var tabsBox = document.getElementById('tabs');
+  var current = 0;
+  CHOSHI.forEach(function (c, i) {
+    var b = document.createElement('button');
+    b.className = 'tab';
+    b.setAttribute('role', 'tab');
+    b.innerHTML = c.name + '<small>' + WEST[c.kyu] + ' · ' + c.type + '</small>';
+    b.addEventListener('click', function () { select(i); });
+    tabsBox.appendChild(b);
+  });
+  function select(i) {
+    current = i;
+    Array.prototype.forEach.call(tabsBox.children, function (b, j) {
+      b.setAttribute('aria-selected', j === i ? 'true' : 'false');
+    });
+    Array.prototype.forEach.call(document.querySelectorAll('.mini'), function (m, j) {
+      m.classList.toggle('current', j === i);
+    });
+    drawWheel(CHOSHI[i]);
+    drawPanel(CHOSHI[i]);
+  }
+
+  // ---------- small multiples ----------
+  var minis = document.getElementById('minis');
+  function buildMinis() {
+  minis.textContent = '';
+  CHOSHI.forEach(function (c, idx) {
+    var box = document.createElement('div');
+    box.className = 'mini';
+    box.setAttribute('role', 'button');
+    box.setAttribute('tabindex', '0');
+    var svg = document.createElementNS(SVGNS, 'svg');
+    svg.setAttribute('viewBox', '-80 -80 160 160');
+    var css = getComputedStyle(document.documentElement);
+    var col = function (v) { return css.getPropertyValue(v).trim(); };
+    el(svg, 'circle', { cx: 0, cy: 0, r: 58, fill: 'none', stroke: col('--hairline'), 'stroke-width': 1 });
+    WEST.forEach(function (_, pc) {
+      var core = c.tones.indexOf(pc) >= 0;
+      var base = angleOf(pc);
+      var diff = c.devJI[pc] - devGamut[pc];
+      var off = Math.abs(diff) > 3;
+      var t0 = XY(base, 52), t1 = XY(base, 64);
+      el(svg, 'line', { x1: t0[0], y1: t0[1], x2: t1[0], y2: t1[1],
+        stroke: col('--gold'), 'stroke-width': core ? 3 : 1.2,
+        opacity: core ? 1 : 0.3, 'stroke-linecap': 'round' });
+      if (core) {
+        var jiA = base + diff * EXAG;
+        if (off) el(svg, 'path', { d: arcPath(base, jiA, 58), fill: 'none',
+          stroke: col('--verm'), 'stroke-width': 2, 'stroke-linecap': 'round' });
+        var dp = XY(jiA, 58);
+        el(svg, 'circle', { cx: dp[0], cy: dp[1], r: 4.2, fill: col('--indigo'),
+          stroke: col('--paper-2'), 'stroke-width': 1.4 });
+      }
+      if (pc === c.kyu) {
+        var kp = XY(base, 40);
+        el(svg, 'text', { x: kp[0], y: kp[1], 'text-anchor': 'middle', 'dominant-baseline': 'middle',
+          style: 'font-size:11px', class: 't-west' }, '宮');
+      }
+    });
+    box.appendChild(svg);
+    var okCount = c.tones.length - c.offTones.length;
+    var meta = okCount === 5
+      ? '<b>' + WEST[c.root] + '</b>ルート · 全音一致'
+      : '<b>' + WEST[c.root] + '</b>ルート · <span class="off">' +
+        c.offTones.map(function (pc) { return WEST[pc]; }).join('・') + 'が−21.5¢</span>';
+    var cap = document.createElement('div');
+    cap.innerHTML = '<div class="m-name">' + c.name + '</div><div class="m-meta">' + meta + '</div>';
+    box.appendChild(cap);
+    var go = function () { select(idx); document.getElementById('wheel').scrollIntoView({ behavior: 'smooth', block: 'center' }); };
+    box.addEventListener('click', go);
+    box.addEventListener('keydown', function (ev) { if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); go(); } });
+    minis.appendChild(box);
+  });
+  }
+
+  // ---------- chain of fifths ----------
+  function drawChain() {
+    var svg = document.getElementById('chainfig');
+    svg.textContent = '';
+    var css = getComputedStyle(document.documentElement);
+    var col = function (v) { return css.getPropertyValue(v).trim(); };
+    var chainPcs = [2, 9, 4, 11, 6, 1, 8, 3, 10, 5, 0, 7]; // 壱越 → … → 双調
+    var x0 = 70, x1 = 890, yFor = function (dev) { return 218 - dev * 8.2; };
+    var xs = chainPcs.map(function (_, i) { return x0 + (x1 - x0) * i / 11; });
+
+    // baseline grid at 0¢ and +19.5¢
+    [0, devGamut[7]].forEach(function (v) {
+      el(svg, 'line', { x1: x0 - 26, y1: yFor(v), x2: x1 + 30, y2: yFor(v),
+        stroke: col('--hairline'), 'stroke-width': 1, 'stroke-dasharray': '2 5' });
+    });
+    el(svg, 'text', { x: x0 - 32, y: yFor(0) + 3, class: 't-chain-dev', 'text-anchor': 'end' }, '0¢');
+    el(svg, 'text', { x: x0 - 32, y: yFor(devGamut[7]) + 3, class: 't-chain-dev', 'text-anchor': 'end' }, '+19.5¢');
+
+    // ascending line
+    var d = '';
+    chainPcs.forEach(function (pc, i) {
+      d += (i ? 'L' : 'M') + xs[i].toFixed(1) + ' ' + yFor(devGamut[pc]).toFixed(1) + ' ';
+    });
+    el(svg, 'path', { d: d, fill: 'none', stroke: col('--gold'), 'stroke-width': 2 });
+
+    // wolf: closing arc back to 壱越
+    var gx = xs[11], gy = yFor(devGamut[7]);
+    el(svg, 'path', {
+      d: 'M' + gx + ' ' + gy + ' C ' + (gx + 60) + ' ' + gy + ', ' + (gx + 60) + ' ' + (yFor(devGamut[2]) - 60) + ', ' + (gx + 8) + ' ' + (yFor(devGamut[2]) - 8),
+      fill: 'none', stroke: col('--verm'), 'stroke-width': 2, 'stroke-dasharray': '4 5'
+    });
+    el(svg, 'text', { x: gx + 8, y: yFor(devGamut[2]) - 22, class: 't-anno-v', 'text-anchor': 'end' }, '−23.5¢ 輪が閉じない');
+    el(svg, 'text', { x: gx + 8, y: yFor(devGamut[2]) - 6, class: 't-anno', 'text-anchor': 'end' }, 'ピタゴラスコンマ');
+
+    // nodes + labels
+    chainPcs.forEach(function (pc, i) {
+      var y = yFor(devGamut[pc]);
+      el(svg, 'circle', { cx: xs[i], cy: y, r: pc === 7 ? 6 : 4.5,
+        fill: pc === 7 ? col('--verm') : col('--gold'), stroke: col('--paper'), 'stroke-width': 1.5 });
+      el(svg, 'text', { x: xs[i], y: y - 16, class: 't-chain-ritsu', 'text-anchor': 'middle' }, RITSU[pc]);
+      el(svg, 'text', { x: xs[i], y: y + 24, class: 't-chain-dev', 'text-anchor': 'middle' },
+        fmt(devGamut[pc], 1));
+    });
+    el(svg, 'text', { x: x0, y: 282, class: 't-anno' }, '← 五度をひとつ登るごとに +2¢ (純正五度 702¢ − 平均律 700¢)。横軸は五度連鎖の順、縦軸は平均律からの偏差。');
+  }
+
+  // ---------- table ----------
+  var tbody = document.querySelector('#datatable tbody');
+  CHOSHI.forEach(function (c) {
+    c.tones.forEach(function (pc, i) {
+      var diff = c.devJI[pc] - devGamut[pc];
+      var off = Math.abs(diff) > 3;
+      var fG = A4 * Math.pow(2, (pc - A_PC) / 12 + devGamut[pc] / 1200);
+      var fJ = A4 * Math.pow(2, (pc - A_PC) / 12 + c.devJI[pc] / 1200);
+      var tr = document.createElement('tr');
+      tr.innerHTML =
+        '<td>' + (i === 0 ? c.name + ' <span style="color:var(--faint)">(root ' + WEST[c.root] + ')</span>' : '') + '</td>' +
+        '<td>' + RITSU[pc] + ' ' + WEST[pc] + '4</td>' +
+        '<td>' + fG.toFixed(2) + '</td>' +
+        '<td>' + fJ.toFixed(2) + '</td>' +
+        '<td class="' + (off ? 'off' : 'match') + '">' + fmt(diff) + '</td>' +
+        '<td>' + Math.abs(fG - fJ).toFixed(1) + '</td>';
+      tbody.appendChild(tr);
+    });
+  });
+
+  // theme change → redraw (colors are read from CSS at draw time)
+  function redrawAll() { buildMinis(); drawChain(); select(current); }
+  new MutationObserver(redrawAll).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  if (window.matchMedia) {
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', redrawAll);
+  }
+
+  buildMinis();
+  drawChain();
+  select(0);
+})();
+</script>
+</body>
+</html>
