@@ -128,7 +128,7 @@
     const GAP = 24;
     const list = [...nodes.values()];
     /* dx/dy: which way to escape — away from the corner the zone is anchored to */
-    const zones = [{ x: 0, y: 0, w: 320, h: 240, dx: 1, dy: 1 }]; // #log
+    const zones = [{ x: 0, y: 0, w: 390, h: 240, dx: 1, dy: 1 }]; // #log
     if (window.innerWidth >= 720 && window.innerHeight >= 600) {
       zones.push({
         x: window.innerWidth - 320,
