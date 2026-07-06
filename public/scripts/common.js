@@ -212,6 +212,9 @@
     const AC = window.AudioContext || window.webkitAudioContext;
     if (!AC) return null;
     const actx = new AC();
+    /* some WebViews (e.g. X's in-app browser) create the context suspended
+       even inside a gesture */
+    if (actx.state === "suspended") actx.resume();
     const master = actx.createGain();
     master.gain.value = 0.9;
     master.connect(actx.destination);
@@ -328,6 +331,8 @@
       kick();
     });
     const release = (e) => {
+      /* WebKit may only unlock audio on pointerup/touchend, not pointerdown */
+      ensureAudio();
       if (!node.grab || e.pointerId !== node.grab.id) return;
       node.grab = null;
       el.classList.remove("drag");
