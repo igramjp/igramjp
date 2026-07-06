@@ -53,11 +53,6 @@
   to = "/app/oshiki/pkg/:splat"
   status = 200
 
-[[redirects]]
-  from = "/app/oshiki/static/*"
-  to = "/app/oshiki/static/:splat"
-  status = 200
-
 # SPAルーティング
 [[redirects]]
   from = "/app/oshiki/"

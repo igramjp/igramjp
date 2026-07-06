@@ -4,7 +4,6 @@
 
 # 静的ファイルを優先
 /app/oshiki/pkg/*    /app/oshiki/pkg/:splat   200
-/app/oshiki/static/* /app/oshiki/static/:splat 200
 
 # SPAルーティング
 /app/oshiki/    /app/oshiki/index.html   200

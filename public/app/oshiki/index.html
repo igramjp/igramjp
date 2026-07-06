@@ -5,93 +5,255 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>oshiki (黄鐘) – Japanese Ritsu &amp; Just Intonation Frequencies via Web MIDI | igram.jp</title>
-  <link href="./static/output.css" rel="stylesheet" />
   <style>
-    #table { border-collapse: collapse; }
-    #table th, #table td { border: 1px solid #d1d5db; padding: 2px 10px; text-align: right; font-variant-numeric: tabular-nums; }
-    #table th { font-weight: 500; color: #374151; }
-    #table td:first-child { text-align: left; }
+    :root {
+      --paper: #F2F0E9;
+      --paper-2: #EAE7DD;
+      --ink: #26221A;
+      --muted: #6B6353;
+      --faint: #A39B89;
+      --hairline: rgba(38, 34, 26, 0.16);
+      --gold: #8C6D1E;
+      --indigo: #2D5FAA;
+      --verm: #B23A2A;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --paper: #17140F;
+        --paper-2: #1E1A13;
+        --ink: #EAE3D3;
+        --muted: #9C937F;
+        --faint: #6A614F;
+        --hairline: rgba(234, 227, 211, 0.18);
+        --gold: #AC851C;
+        --indigo: #5B8FD6;
+        --verm: #D96146;
+      }
+    }
+
+    * { box-sizing: border-box; }
+    [hidden] { display: none !important; }
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Yu Gothic", "Noto Sans JP", sans-serif;
+      font-size: 15px;
+      line-height: 1.7;
+    }
+    main { max-width: 680px; margin: 0 auto; padding: 40px 20px 64px; }
+
+    /* ---------- header ---------- */
+    .eyebrow {
+      font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase;
+      color: var(--muted); margin-bottom: 10px;
+    }
+    .eyebrow b { color: var(--gold); font-weight: 600; }
+    h1 {
+      font-family: "Hiragino Mincho ProN", "Yu Mincho", "Noto Serif JP", serif;
+      font-size: clamp(26px, 5vw, 34px); font-weight: 600;
+      letter-spacing: 0.06em; line-height: 1.3; margin: 0 0 10px;
+    }
+    .lede { color: var(--muted); font-size: 13px; margin: 0 0 28px; max-width: 54ch; }
+    .lede a { color: var(--indigo); text-decoration: none; }
+    .lede a:hover { text-decoration: underline; }
+
+    /* ---------- controls ---------- */
+    .controls { display: flex; flex-wrap: wrap; gap: 14px 18px; align-items: flex-end; margin-bottom: 10px; }
+    .field { display: flex; flex-direction: column; gap: 4px; }
+    .field > label {
+      font-size: 10.5px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted);
+    }
+    .selectwrap { position: relative; }
+    .selectwrap::after {
+      content: "▾"; position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
+      color: var(--muted); pointer-events: none; font-size: 11px;
+    }
+    select, input[type="number"] {
+      appearance: none; -webkit-appearance: none;
+      font: inherit; font-size: 14px; color: var(--ink);
+      background: var(--paper-2); border: 1px solid var(--hairline); border-radius: 8px;
+      padding: 6px 10px; font-variant-numeric: tabular-nums;
+    }
+    select { padding-right: 26px; }
+    input[type="number"] { width: 96px; }
+    select:focus-visible, input:focus-visible { outline: 2px solid var(--indigo); outline-offset: 1px; }
+    select:disabled { opacity: 0.4; }
+
+    .anchor-row { margin: 4px 0 26px; font-size: 12.5px; color: var(--muted); }
+    .anchor-row label { display: inline-flex; align-items: center; gap: 7px; cursor: pointer; }
+    .anchor-row input { accent-color: var(--gold); width: 14px; height: 14px; }
+    .anchor-row input:disabled + span { opacity: 0.4; }
+
+    /* ---------- live MIDI readout ---------- */
+    .live {
+      border: 1px solid var(--hairline); border-radius: 12px; background: var(--paper-2);
+      padding: 16px 20px 18px; margin-bottom: 30px;
+    }
+    .live .k {
+      font-size: 10.5px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted);
+      display: flex; align-items: center; gap: 8px;
+    }
+    .live .k .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--faint); }
+    .live.active .k .dot { background: var(--indigo); }
+    .live .readout {
+      display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; margin-top: 6px;
+      font-variant-numeric: tabular-nums;
+    }
+    .live .hz {
+      font-family: "Hiragino Mincho ProN", "Yu Mincho", serif;
+      font-size: clamp(30px, 7vw, 44px); line-height: 1.15;
+    }
+    .live .hz small { font-size: 0.45em; color: var(--muted); letter-spacing: 0.06em; }
+    .live .name { font-size: 16px; color: var(--muted); }
+    .live .name .ritsu { font-family: "Hiragino Mincho ProN", "Yu Mincho", serif; color: var(--ink); }
+    .live .waiting { color: var(--muted); font-size: 14px; margin-top: 6px; }
+
+    /* ---------- table ---------- */
+    h2 {
+      font-family: "Hiragino Mincho ProN", "Yu Mincho", serif; font-weight: 600;
+      font-size: 17px; letter-spacing: 0.06em; margin: 0 0 2px;
+    }
+    .hint { font-size: 12px; color: var(--faint); margin: 0 0 12px; }
+    .tablewrap { overflow-x: auto; }
+    table { border-collapse: collapse; width: 100%; max-width: 480px; font-size: 14px; }
+    th {
+      text-align: left; font-weight: 500; font-size: 10.5px; letter-spacing: 0.14em;
+      text-transform: uppercase; color: var(--muted);
+      padding: 6px 12px; border-bottom: 1px solid var(--hairline);
+    }
+    td { padding: 5px 12px; border-bottom: 1px solid var(--hairline); font-variant-numeric: tabular-nums; }
+    th.num, td.num { text-align: right; }
+    td.ritsu { font-family: "Hiragino Mincho ProN", "Yu Mincho", serif; }
+    td.ritsu small { font-family: "Hiragino Kaku Gothic ProN", "Hiragino Sans", sans-serif;
+      color: var(--faint); font-size: 11px; margin-left: 6px; }
+    tbody tr { cursor: pointer; }
+    tbody tr:hover { background: var(--paper-2); }
+    tbody tr.playing { background: var(--paper-2); box-shadow: inset 3px 0 0 var(--indigo); }
+    tbody tr.anchor td:first-child::before {
+      content: ""; display: inline-block; width: 7px; height: 7px; border-radius: 50%;
+      background: var(--gold); margin-right: 7px; vertical-align: 1px;
+    }
+
+    footer {
+      margin-top: 40px; padding-top: 16px; border-top: 1px solid var(--hairline);
+      font-size: 12px; color: var(--muted);
+    }
+    footer a { color: var(--indigo); text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+
+    @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
   </style>
 </head>
 
-<body class="bg-white p-4">
-  <h1 class="font-mono text-base font-medium text-gray-700">oshiki (黄鐘)</h1>
-  <p class="mb-2 w-full font-mono text-sm text-gray-700">
-    Note-to-frequency tables in traditional Japanese and classical tunings.
-    Defaults: Sanbun-Soneki (三分損益法) from Ichikotsu (D), Ōshiki A4 = 430 Hz —
-    <a href="https://github.com/igramjp/oshiki" target="_blank" rel="noreferrer noopener" class="font-medium">github.com/igramjp/oshiki</a>
-  </p>
-  <div>
-    <label for="temperament" class="w-full font-mono text-sm font-medium text-gray-700">Temperament:</label>
-    <select id="temperament" name="temperament"
-      class="mb-2 mt-1 block w-min rounded-md border border-gray-300 bg-white px-1 py-1 font-mono shadow-sm focus:outline-none sm:text-sm">
-      <option value="sanbun" selected>Sanbun-Soneki (三分損益法)</option>
-      <option value="just">Just Intonation (5-limit)</option>
-      <option value="equal">Equal Temperament (12-TET)</option>
-    </select>
-  </div>
-  <div>
-    <label for="rootKey" class="w-full font-mono text-sm font-medium text-gray-700">Root Key:</label>
-    <select id="rootKey" name="rootKey"
-      class="mb-2 mt-1 block w-min rounded-md border border-gray-300 bg-white px-1 py-1 font-mono shadow-sm focus:outline-none sm:text-sm">
-      <option value="C">C (Shinsen 神仙)</option>
-      <option value="C#">C# (Kamimu 上無)</option>
-      <option value="D" selected>D (Ichikotsu 壱越)</option>
-      <option value="D#">D# (Tangin 断金)</option>
-      <option value="E">E (Hyōjō 平調)</option>
-      <option value="F">F (Shōzetsu 勝絶)</option>
-      <option value="F#">F# (Shimomu 下無)</option>
-      <option value="G">G (Sōjō 双調)</option>
-      <option value="G#">G# (Fushō 鳧鐘)</option>
-      <option value="A">A (Ōshiki 黄鐘)</option>
-      <option value="A#">A# (Rankei 鸞鏡)</option>
-      <option value="B">B (Banshiki 盤渉)</option>
-    </select>
-  </div>
-  <div>
-    <label for="frequency" class="w-full font-mono text-sm font-medium text-gray-700">Reference Frequency A4 (Hz):</label>
-    <input type="number" id="frequency" name="frequency" value="430.0" step="0.1"
-      class="mb-2 mt-1 block w-min rounded-md border border-gray-300 px-1 py-1 font-mono shadow-sm focus:outline-none sm:text-sm" />
-  </div>
-  <div class="mb-2 mt-1">
-    <label for="rootAnchor" class="font-mono text-sm font-medium text-gray-700">
-      <input type="checkbox" id="rootAnchor" name="rootAnchor" />
-      Anchor root to its Equal Temperament pitch (synth microtuning preset mode)
-    </label>
-  </div>
-  <div id="output" class="mt-4 inline-flex bg-black px-3 py-1 font-mono text-base font-medium text-white">
-    Waiting for MIDI input...
-  </div>
-  <div class="mt-4">
-    <table id="table" class="font-mono sm:text-sm">
-      <thead>
-        <tr><th>Note</th><th>Frequency (Hz)</th></tr>
-      </thead>
-      <tbody></tbody>
-    </table>
-  </div>
+<body>
+  <main>
+    <header>
+      <div class="eyebrow"><b>oshiki</b> · 黄鐘 A₄ = 430 Hz</div>
+      <h1>十二律 · Note-to-Frequency</h1>
+      <p class="lede">
+        Traditional Japanese and classical tunings, live in the browser.
+        Defaults to the twelve ritsu — Sanbun-Soneki (三分損益法) from Ichikotsu (D),
+        Ōshiki (A) anchored to 430 Hz. Powered by the
+        <a href="https://github.com/igramjp/oshiki" target="_blank" rel="noreferrer noopener">oshiki</a> crate via WebAssembly.
+      </p>
+    </header>
+
+    <div class="controls">
+      <div class="field">
+        <label for="temperament">Temperament</label>
+        <span class="selectwrap">
+          <select id="temperament" name="temperament">
+            <option value="sanbun" selected>Sanbun-Soneki 三分損益法</option>
+            <option value="just">Just Intonation (5-limit)</option>
+            <option value="equal">Equal Temperament (12-TET)</option>
+          </select>
+        </span>
+      </div>
+      <div class="field">
+        <label for="rootKey">Root Key</label>
+        <span class="selectwrap">
+          <select id="rootKey" name="rootKey">
+            <option value="C">C (Shinsen 神仙)</option>
+            <option value="C#">C# (Kamimu 上無)</option>
+            <option value="D" selected>D (Ichikotsu 壱越)</option>
+            <option value="D#">D# (Tangin 断金)</option>
+            <option value="E">E (Hyōjō 平調)</option>
+            <option value="F">F (Shōzetsu 勝絶)</option>
+            <option value="F#">F# (Shimomu 下無)</option>
+            <option value="G">G (Sōjō 双調)</option>
+            <option value="G#">G# (Fushō 鳧鐘)</option>
+            <option value="A">A (Ōshiki 黄鐘)</option>
+            <option value="A#">A# (Rankei 鸞鏡)</option>
+            <option value="B">B (Banshiki 盤渉)</option>
+          </select>
+        </span>
+      </div>
+      <div class="field">
+        <label for="frequency">Reference A₄ (Hz)</label>
+        <input type="number" id="frequency" name="frequency" value="430.0" step="0.1" min="200" max="880" />
+      </div>
+    </div>
+    <div class="anchor-row">
+      <label>
+        <input type="checkbox" id="rootAnchor" name="rootAnchor" />
+        <span>Anchor the root to its Equal Temperament pitch — how most synth microtuning presets behave. Off: A₄ stays exactly at the reference.</span>
+      </label>
+    </div>
+
+    <div class="live" id="live">
+      <div class="k"><span class="dot"></span>Live MIDI</div>
+      <div class="waiting" id="liveWaiting">Waiting for MIDI input…</div>
+      <div class="readout" id="liveReadout" hidden>
+        <span class="hz"><span id="liveHz">—</span><small> Hz</small></span>
+        <span class="name"><span class="ritsu" id="liveRitsu"></span> <span id="liveNote"></span></span>
+      </div>
+    </div>
+
+    <h2>Frequency Table</h2>
+    <p class="hint">Middle octave (C4–C5). Click a row to hear the pitch. ● = anchor.</p>
+    <div class="tablewrap">
+      <table>
+        <thead>
+          <tr><th>Note</th><th>Ritsu 律</th><th class="num">Frequency (Hz)</th></tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+
+    <footer>
+      CLI &amp; source: <a href="https://github.com/igramjp/oshiki" target="_blank" rel="noreferrer noopener">github.com/igramjp/oshiki</a>
+      · Ritsu names follow the fixed gamut generated from Ichikotsu.
+    </footer>
+  </main>
+
   <script type="module">
     import init, { note_frequency, note_label } from "./pkg/oshiki.js";
+
+    const RITSU = ["神仙", "上無", "壱越", "断金", "平調", "勝絶", "下無", "双調", "鳧鐘", "黄鐘", "鸞鏡", "盤渉"];
+    const RITSU_ROMAJI = ["Shinsen", "Kamimu", "Ichikotsu", "Tangin", "Hyōjō", "Shōzetsu", "Shimomu", "Sōjō", "Fushō", "Ōshiki", "Rankei", "Banshiki"];
+    const A_PC = 9;
 
     const temperamentEl = document.getElementById("temperament");
     const rootKeyEl = document.getElementById("rootKey");
     const frequencyEl = document.getElementById("frequency");
     const rootAnchorEl = document.getElementById("rootAnchor");
-    const outputEl = document.getElementById("output");
-    const tbodyEl = document.querySelector("#table tbody");
-
-    function settings() {
-      return {
-        rootKey: rootKeyEl.value,
-        reference: parseFloat(frequencyEl.value) || 430.0,
-        temperament: temperamentEl.value,
-        rootAnchor: rootAnchorEl.checked,
-      };
-    }
+    const tbodyEl = document.getElementById("tbody");
+    const liveEl = document.getElementById("live");
+    const liveWaitingEl = document.getElementById("liveWaiting");
+    const liveReadoutEl = document.getElementById("liveReadout");
+    const liveHzEl = document.getElementById("liveHz");
+    const liveNoteEl = document.getElementById("liveNote");
+    const liveRitsuEl = document.getElementById("liveRitsu");
 
     function frequencyOf(note) {
-      const s = settings();
-      return note_frequency(note, s.rootKey, s.reference, s.temperament, s.rootAnchor);
+      return note_frequency(
+        note,
+        rootKeyEl.value,
+        parseFloat(frequencyEl.value) || 430.0,
+        temperamentEl.value,
+        rootAnchorEl.checked,
+      );
     }
 
     // The root key and anchor are meaningless in Equal Temperament.
@@ -103,17 +265,50 @@
 
     function renderTable() {
       syncControls();
-      let rows = "";
+      tbodyEl.textContent = "";
       for (let note = 60; note <= 72; note++) {
-        rows += `<tr><td>${note_label(note)}</td><td>${frequencyOf(note).toFixed(3)}</td></tr>`;
+        const pc = note % 12;
+        const tr = document.createElement("tr");
+        if (pc === A_PC) tr.className = "anchor";
+        const freq = frequencyOf(note);
+        tr.innerHTML =
+          `<td>${note_label(note)}</td>` +
+          `<td class="ritsu">${RITSU[pc]}<small>${RITSU_ROMAJI[pc]}</small></td>` +
+          `<td class="num">${freq.toFixed(3)}</td>`;
+        tr.addEventListener("click", () => play(freq, tr));
+        tbodyEl.appendChild(tr);
       }
-      tbodyEl.innerHTML = rows;
     }
 
+    // --- tone preview (click a table row) ---
+    let audioCtx = null;
+    function play(freq, tr) {
+      audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      const t = audioCtx.currentTime;
+      osc.type = "sine";
+      osc.frequency.value = freq;
+      gain.gain.setValueAtTime(0, t);
+      gain.gain.linearRampToValueAtTime(0.22, t + 0.02);
+      gain.gain.exponentialRampToValueAtTime(0.0001, t + 1.1);
+      osc.connect(gain).connect(audioCtx.destination);
+      osc.start(t);
+      osc.stop(t + 1.2);
+      tr.classList.add("playing");
+      setTimeout(() => tr.classList.remove("playing"), 700);
+    }
+
+    // --- live MIDI ---
     function onMIDIMessage(message) {
       const [status, note, velocity] = message.data;
       if ((status & 0xf0) === 0x90 && velocity > 0) {
-        outputEl.innerText = `${note} ${note_label(note)} ${frequencyOf(note).toFixed(3)} Hz`;
+        liveWaitingEl.hidden = true;
+        liveReadoutEl.hidden = false;
+        liveEl.classList.add("active");
+        liveHzEl.textContent = frequencyOf(note).toFixed(3);
+        liveNoteEl.textContent = `${note_label(note)} · MIDI ${note}`;
+        liveRitsuEl.textContent = RITSU[note % 12];
       }
     }
 
@@ -124,13 +319,18 @@
         el.addEventListener("input", renderTable);
       }
       if (navigator.requestMIDIAccess) {
-        navigator.requestMIDIAccess().then((access) => {
-          for (const input of access.inputs.values()) {
-            input.onmidimessage = onMIDIMessage;
-          }
-        });
+        try {
+          const access = await navigator.requestMIDIAccess();
+          const connect = () => {
+            for (const input of access.inputs.values()) input.onmidimessage = onMIDIMessage;
+          };
+          connect();
+          access.onstatechange = connect;
+        } catch {
+          liveWaitingEl.textContent = "MIDI access was denied.";
+        }
       } else {
-        outputEl.innerText = "Web MIDI is not supported in this browser.";
+        liveWaitingEl.textContent = "Web MIDI is not supported in this browser.";
       }
     }
 
