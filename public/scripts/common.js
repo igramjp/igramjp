@@ -226,6 +226,23 @@
     feedback.connect(delay);
     delay.connect(wet);
     wet.connect(actx.destination);
+    /* the Bloom loop: every note returns ~7 s later, a little
+       softer and darker each pass, sinking into the garden */
+    const loop = actx.createDelay(12);
+    loop.delayTime.value = 6.8;
+    const loopTone = actx.createBiquadFilter();
+    loopTone.type = "lowpass";
+    loopTone.frequency.value = 1800;
+    const loopFeedback = actx.createGain();
+    loopFeedback.gain.value = 0.6;
+    const loopWet = actx.createGain();
+    loopWet.gain.value = 0.55;
+    master.connect(loop);
+    loop.connect(loopTone);
+    loopTone.connect(loopFeedback);
+    loopFeedback.connect(loop);
+    loopTone.connect(loopWet);
+    loopWet.connect(actx.destination);
     audio = { ctx: actx, master };
     return audio;
   }
