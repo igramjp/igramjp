@@ -20,9 +20,9 @@
   const INFO = {
     manabu:
       "五十嵐学<br>" +
-      "標高1000m・八ヶ岳西麓在住、プログラマー。<br>" +
+      "標高1000m・八ヶ岳西麓在住、プログラマー。SuperColliderと、雅楽に合わせる電子音。<br>" +
       "Manabu Igarashi<br>" +
-      "Programmer based at 1,000 m on the western slopes of Yatsugatake, Japan.<br>" +
+      "Programmer based at 1,000m on the western slopes of Yatsugatake, Japan. SuperCollider, and electronics tuned to gagaku.<br>" +
       "GitHub<br>" +
       '<a href="//github.com/igramjp" target="_blank" rel="noreferrer noopener">https://github.com/igramjp</a><br>' +
       "X<br>" +
