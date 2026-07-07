@@ -20,22 +20,24 @@
   const INFO = {
     manabu:
       "五十嵐学<br>" +
-      "諏訪・八ヶ岳西麓在住、プログラマー。<br>" +
+      "標高1000m・八ヶ岳西麓在住、プログラマー。<br>" +
       "Manabu Igarashi<br>" +
-      "Programmer based in Suwa, Japan.<br>" +
+      "Programmer based at 1,000 m on the western slopes of Yatsugatake, Japan.<br>" +
       "GitHub<br>" +
-      '<a href="//github.com/igramjp" target="_blank" rel="noreferrer noopener">https://github.com/igramjp</a>',
+      '<a href="//github.com/igramjp" target="_blank" rel="noreferrer noopener">https://github.com/igramjp</a><br>' +
+      "X<br>" +
+      '<a href="https://x.com/igramjp" target="_blank" rel="noreferrer noopener">https://x.com/igramjp</a>',
     igram:
       "©︎ " + new Date().getFullYear() + " igram All rights reserved.<br>",
     lab:
       "IGRAM LAB (note)<br>" +
-      "音響プログラミングの実験や制作の記録を公開しています。音の現象を探る実験室です。<br>" +
-      "Experiments and notes in sound programming. A lab for exploring sonic phenomena.<br>" +
+      "音響プログラミングは、技術として始まり、やがて音楽となる。実験や制作の記録を note で公開しています。<br>" +
+      "Sound programming begins as technique and, in time, becomes music. Experiments and process notes, published on note.<br>" +
       '<a href="https://note.com/igram" target="_blank" rel="noreferrer noopener">https://note.com/igram</a>',
     supercollider:
       "SuperCollider<br>" +
       "音響合成とアルゴリズミック・コンポジションのための言語・環境。現在の制作の中心で、IGRAM LAB の実験の多くは SuperCollider で書かれています。<br>" +
-      "A language and environment for audio synthesis and algorithmic composition — currently my main instrument. Most IGRAM LAB experiments are written in SuperCollider.<br>" +
+      "Sound experiments with SuperCollider — a language and environment for audio synthesis and algorithmic composition, and my main instrument. Most IGRAM LAB experiments are written in it.<br>" +
       '<a href="https://supercollider.github.io/" target="_blank" rel="noreferrer noopener">https://supercollider.github.io/</a>',
     app:
       "oshiki（黄鐘）<br>" +
