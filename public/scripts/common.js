@@ -20,9 +20,9 @@
   const INFO = {
     manabu:
       "五十嵐学<br>" +
-      "標高1000m・八ヶ岳西麓在住、プログラマー。SuperColliderと、雅楽に合わせる電子音。<br>" +
+      "標高940m・八ヶ岳西麓在住、プログラマー。SuperColliderと、雅楽に合わせる電子音。<br>" +
       "Manabu Igarashi<br>" +
-      "Programmer based at 1,000m on the western slopes of Yatsugatake, Japan. SuperCollider, and electronics tuned to gagaku.<br>" +
+      "Programmer based at 940m on the western slopes of Yatsugatake, Japan. SuperCollider, and electronics tuned to gagaku.<br>" +
       "GitHub<br>" +
       '<a href="//github.com/igramjp" target="_blank" rel="noreferrer noopener">https://github.com/igramjp</a><br>' +
       "X<br>" +
@@ -299,7 +299,7 @@
       };
       osc.start(t);
       osc.stop(t + NOTE_SECONDS + 0.1);
-    } catch (e) {}
+    } catch (e) { }
   }
 
   /* X's WebView only honors a clean click as the unlock gesture, and a
@@ -334,8 +334,8 @@
         unmuteEl.src = SILENT_WAV;
       }
       const p = unmuteEl.play();
-      if (p && p.catch) p.catch(() => {});
-    } catch (e) {}
+      if (p && p.catch) p.catch(() => { });
+    } catch (e) { }
   }
 
   /* strict WebViews (e.g. X's in-app browser) only unlock audio inside a
@@ -352,7 +352,7 @@
         src.buffer = a.ctx.createBuffer(1, 1, 22050);
         src.connect(a.ctx.destination);
         src.start(0);
-      } catch (e) {}
+      } catch (e) { }
     }
     /* resume()'s promise can hang forever when the gesture is rejected,
        so the hint must not wait for it — re-check on a timer instead */

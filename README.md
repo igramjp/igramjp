@@ -29,4 +29,4 @@ Short videos of works in progress, each with the complete code to run and modify
 
 ---
 
-Rust programmer. Living at 1,000m elevation, western foot of Mt. Yatsugatake, Japan.
+Rust programmer. Living at 940m elevation, western foot of Mt. Yatsugatake, Japan.
