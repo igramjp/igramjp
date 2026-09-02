@@ -40,14 +40,14 @@
       "Sound experiments with SuperCollider — a language and environment for audio synthesis and algorithmic composition, and my main instrument. Most IGRAM LAB experiments are written in it.<br>" +
       '<a href="https://supercollider.github.io/" target="_blank" rel="noreferrer noopener">https://supercollider.github.io/</a>',
     app:
-      "oshiki（黄鐘）<br>" +
+      "oshiki (黄鐘)<br>" +
       "雅楽の十二律(三分損益法・黄鐘 A=430Hz)と純正律・平均律の周波数表を、Web MIDI入力にもリアルタイムで反応する形で表示する実験アプリ。<br>" +
-      "oshiki (黄鐘) – Note-to-frequency tables in traditional Japanese and classical tunings (Sanbun-Soneki, just intonation, equal temperament), live via Web MIDI.<br>" +
+      "oshiki (黄鐘) - Note-to-frequency tables in traditional Japanese and classical tunings (Sanbun-Soneki, just intonation, equal temperament), live via Web MIDI.<br>" +
       '<a href="https://igram.jp/app/oshiki/" target="_blank" rel="noreferrer noopener">https://igram.jp/app/oshiki/</a>',
     bamboo:
-      "竹音（ちくおん／bamboo music）<br>" +
-      "日本を拠点とするインディペンデントな音楽レーベル兼アート・インプリントです。<br>" +
-      "bamboo music is an independent record label and art imprint based in Japan.<br>" +
+      "竹音 (ちくおん/bamboo music)<br>" +
+      "長野県富士見町を拠点とするインディペンデントな出版レーベル。音楽と写真を軸に、音源作品、写真集、アートプリント、関連グッズの企画・制作・販売を行っています。<br>" +
+      "bamboo music is an independent publishing label based in Fujimi, Nagano, Japan, working across music and photography — recordings, photo books, art prints, and related goods.<br>" +
       '<a href="https://bamboomusic.asia/" target="_blank" rel="noreferrer noopener">https://bamboomusic.asia/</a>',
     contact:
       "CONTACT (Google Forms)<br>" +
